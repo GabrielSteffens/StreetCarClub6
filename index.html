@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Gestão - Street Car Club</title>
+    
+    <!-- Google Fonts & Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=2.1.2">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-container" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo-box">
+                    <img src="street_car_club_gta_wide_banner.png" alt="Street Car Club" style="width: 100%; height: 100%; object-fit: cover; object-position: center 30%;">
+                </div>
+                <h2>Street Car Club</h2>
+                <p>Painel de Controle — S6</p>
+            </div>
+            
+            <form id="login-form" onsubmit="handleAuthSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label" for="auth-email">E-mail</label>
+                    <input type="email" class="form-control" id="auth-email" placeholder="nome@provedor.com" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="auth-password">Senha</label>
+                    <input type="password" class="form-control" id="auth-password" placeholder="Sua senha secreta" required autocomplete="current-password">
+                </div>
+                <div id="auth-message" class="auth-message" style="display: none; margin-bottom: 1rem; font-size: 0.8rem; text-align: center; border-radius: 4px; padding: 0.50rem;"></div>
+                
+                <button type="submit" class="btn btn-cyan btn-block" id="auth-btn">
+                    <i class="ri-login-box-line"></i> <span id="auth-btn-text">Entrar no Painel</span>
+                </button>
+            </form>
+            
+            <div class="login-toggle">
+                <span id="auth-toggle-label">Não possui uma conta?</span>
+                <a href="#" id="auth-toggle-btn" onclick="toggleAuthMode(event)">Criar Conta</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container" id="app-container" style="display: none;">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <i class="ri-steering-fill brand-icon"></i>
+                <div>
+                    <h2 class="brand-name">Street Car Club</h2>
+                    <span class="brand-tagline">Management HUD</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="switchSection('dashboard')" id="nav-dashboard">
+                        <i class="ri-dashboard-3-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-orange" onclick="switchSection('mineracao')" id="nav-mineracao">
+                        <i class="ri-copper-diamond-line"></i>
+                        <span>Mineração</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-pink" onclick="switchSection('cozinha')" id="nav-cozinha">
+                        <i class="ri-restaurant-line"></i>
+                        <span>Cozinha</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-pink" onclick="switchSection('impressora3d')" id="nav-impressora3d">
+                        <i class="ri-printer-line"></i>
+                        <span>Impressora 3D</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-orange" onclick="switchSection('moinho')" id="nav-moinho">
+                        <i class="ri-compasses-2-line"></i>
+                        <span>Moinho de Refino</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-orange" onclick="switchSection('impressorapo')" id="nav-impressorapo">
+                        <i class="ri-cpu-line"></i>
+                        <span>Imp. Industrial de Pó</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <a class="nav-link link-green" onclick="switchSection('gastos')" id="nav-gastos">
+                        <i class="ri-wallet-3-line"></i>
+                        <span>Gestão de Gastos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchSection('estoque')" id="nav-estoque">
+                        <i class="ri-archive-line"></i>
+                        <span>Gestão de Estoque</span>
+                    </a>
+                </li>
+                <li class="nav-item" style="margin-top: 1rem; border-top: 1px solid rgba(255, 51, 51, 0.15); padding-top: 0.5rem;">
+                    <a class="nav-link" onclick="logoutUser()" style="color: var(--accent-red); cursor: pointer;">
+                        <i class="ri-logout-box-line"></i>
+                        <span>Sair da Conta</span>
+                    </a>
+                </li>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p>Street Car Club &copy; 2026</p>
+                <p style="font-size: 0.65rem; margin-top: 4px;">Sexta Geração (S6)</p>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Header -->
+            <header class="top-header">
+                <button class="menu-toggle" id="menu-toggle" onclick="toggleSidebar()">
+                    <i class="ri-menu-unfold-line"></i>
+                </button>
+                <div class="page-title-container">
+                    <h1 id="page-title">Dashboard Geral</h1>
+                    <p id="page-description">Visão geral das operações, estoque crítico e resumo financeiro.</p>
+                </div>
+                
+                <!-- Global Search HUD -->
+                <div class="global-search-container">
+                    <div class="global-search-box">
+                        <input type="text" id="global-search-input" class="global-search-input" placeholder="Buscar receita ou item..." oninput="handleGlobalSearch()" onfocus="showSearchDropdown()" onblur="hideSearchDropdownDelayed()">
+                        <i class="ri-search-line global-search-icon"></i>
+                        <div class="global-search-dropdown" id="global-search-dropdown">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="club-status">
+                    <div class="status-badge">
+                        <span class="status-indicator"></span>
+                        <span>S6 Servidor Online</span>
+                    </div>
+                    <div class="finance-badge" id="header-balance">
+                        Saldo: R$ 0,00
+                    </div>
+                </div>
+            </header>
+            
+            <!-- SECTION 1: DASHBOARD -->
+            <section id="dashboard-section" class="dashboard-section active">
+                <div class="card landing-card" style="padding: 0; overflow: hidden; border: 1px solid var(--border-color); background: var(--bg-card);">
+                    <!-- Banner Image (Stretched / Cover) -->
+                    <div class="landing-banner-container" style="width: 100%; height: 550px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border-color);">
+                        <img src="street_car_club_gta_wide_banner.png" alt="Street Car Club GTA RP" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85) contrast(1.05); object-position: center;">
+                        <div class="landing-banner-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(7, 8, 11, 0) 60%, rgba(7, 8, 11, 0.95) 100%); pointer-events: none;"></div>
+                    </div>
+
+                    <!-- Welcome Details -->
+                    <div style="padding: 2.5rem 3rem;">
+                        <h2 style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; color: #fff;">
+                            CENTRAL DE GESTÃO E FABRICAÇÃO S6
+                        </h2>
+                        
+                        <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem;">
+                            Bem-vindo ao HUD de controle operacional do <strong>Street Car Club - Sexta Geração</strong>. 
+                            Este painel foi desenvolvido especificamente para gerenciar todos os aspectos de logística de insumos, 
+                            cadeia de suprimentos, produção industrial, culinária e finanças corporativas do clube no servidor.
+                        </p>
+
+                        <hr style="border: 0; height: 1px; background: var(--border-color); margin-bottom: 2rem;">
+
+                        <h3 style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 1.25rem; letter-spacing: 0.5px;">
+                            O que este sistema contém:
+                        </h3>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+                            <!-- Mineração -->
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="font-size: 1.75rem; color: var(--accent-orange);"><i class="ri-copper-diamond-line"></i></div>
+                                <div>
+                                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 0.25rem;">Mineração &amp; Fundição</h4>
+                                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">Calculadora reativa e controle de metais brutos (Ferro, Cobre, Prata, Aço e Titânio) com taxa de processamento de 2 brutos por 1 liga forjada.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Moinho -->
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="font-size: 1.75rem; color: var(--accent-orange);"><i class="ri-factory-line"></i></div>
+                                <div>
+                                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 0.25rem;">Moinho de Refino</h4>
+                                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">Trituração de lingotes de metal em pós sinterizados e refino de borracha bruta em fios de cobre, pó de alumínio, pó de aço e compostos secundários.</p>
+                                </div>
+                            </div>
+
+                            <!-- Impressora 3D -->
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="font-size: 1.75rem; color: var(--accent-pink);"><i class="ri-printer-line"></i></div>
+                                <div>
+                                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 0.25rem;">Impressora 3D</h4>
+                                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">Manufatura aditiva de peças leves de reposição. Inclui 11 receitas complexas como bases de ECU, carcaças de sensores, molduras e dutos.</p>
+                                </div>
+                            </div>
+
+                            <!-- Impressora de Pó -->
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="font-size: 1.75rem; color: var(--accent-red);"><i class="ri-cpu-line"></i></div>
+                                <div>
+                                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 0.25rem;">Sinterização Industrial de Pó</h4>
+                                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">Fundição a laser DMLS para componentes pesados de motor (Blocos, Cabeçotes, Bielas, Virabrequins e Turbinas). Possui verificação de XP (700 XP) e Modo Admin.</p>
+                                </div>
+                            </div>
+
+                            <!-- Cozinha -->
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="font-size: 1.75rem; color: var(--accent-pink);"><i class="ri-restaurant-line"></i></div>
+                                <div>
+                                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 0.25rem;">Cozinha Industrial</h4>
+                                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">Fila reativa com 4 slots de cozimento simultâneos para produção de combos alimentares (Pães, Pipoca, Saladas, Burgers, Sanduíches e Café) com temporizadores regressivos.</p>
+                                </div>
+                            </div>
+
+                            <!-- Finanças e Estoque -->
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="font-size: 1.75rem; color: var(--accent-cyan);"><i class="ri-archive-line"></i></div>
+                                <div>
+                                    <h4 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 0.25rem;">Estoque Geral &amp; Gastos</h4>
+                                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">Fluxo de caixa corporativo integrado de receitas/despesas e tabela completa de estoque geral com avisos de falta de material e ajuste rápido.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="border: 0; height: 1px; background: var(--border-color); margin-bottom: 2rem;">
+
+                        <div style="background: rgba(0, 240, 255, 0.03); border: 1px solid rgba(0, 240, 255, 0.1); border-radius: 8px; padding: 1.25rem; display: flex; align-items: center; gap: 1rem;">
+                            <i class="ri-information-line" style="font-size: 1.5rem; color: var(--accent-cyan);"></i>
+                            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                                <strong>Dica de Navegação:</strong> Utilize o menu lateral esquerdo para alternar entre os departamentos ou digite no <strong>Buscador HUD</strong> no topo do site para ir diretamente à receita da peça que deseja fabricar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 2: MINERAÇÃO -->
+            <section id="mineracao-section" class="dashboard-section">
+                <div class="content-grid">
+                    <!-- Left: Inventory & Custom Adjustment -->
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="ri-shield-flash-line"></i> Status do Estoque de Mineração</h3>
+                                <span style="font-size: 0.8rem; color: var(--accent-cyan);">Taxa: 2 Brutos = 1 Forjado</span>
+                            </div>
+                            <div class="material-list" id="mining-inventory-list">
+                                <!-- Generated by JS for: Prata, Ferro, Cobre, Aço, Titânio -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Calculator & Quick Add -->
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="ri-calculator-line"></i> Processadora de Minérios</h3>
+                            </div>
+                            <form id="mining-calc-form" onsubmit="event.preventDefault();">
+                                <div class="form-group">
+                                    <label class="form-label" for="calc-material-select">Mineral a Processar</label>
+                                    <select class="form-control" id="calc-material-select" onchange="updateMiningCalcOutput()">
+                                        <option value="ferro">Ferro (Bruto)</option>
+                                        <option value="cobre">Cobre (Bruto)</option>
+                                        <option value="prata">Prata (Bruto)</option>
+                                        <option value="aco">Aço (Bruto)</option>
+                                        <option value="titanio">Titânio (Bruto)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="calc-raw-qty">Quantidade Bruta</label>
+                                    <input type="number" class="form-control" id="calc-raw-qty" value="0" min="0" oninput="updateMiningCalcOutput()">
+                                </div>
+                                
+                                <div class="calc-container">
+                                    <div class="calc-title">Resultado Estimado</div>
+                                    <div class="calc-row">
+                                        <div class="calc-item">
+                                            <div class="calc-item-val" id="calc-show-raw">0</div>
+                                            <div class="calc-item-lbl">Brutos</div>
+                                        </div>
+                                        <i class="ri-arrow-right-line calc-arrow"></i>
+                                        <div class="calc-item">
+                                            <div class="calc-item-val" id="calc-show-forged" style="color: var(--accent-cyan);">0</div>
+                                            <div class="calc-item-lbl">Forjados</div>
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary); text-align: center;" id="calc-remainder-text">
+                                        Nenhuma sobra.
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                                    <button class="btn btn-orange btn-block" type="button" onclick="executeRefineryProcess()">
+                                        <i class="ri-refresh-line"></i> Confirmar Refino
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 3: COZINHA -->
+            <section id="cozinha-section" class="dashboard-section">
+                <div class="kitchen-container">
+                    
+                    <!-- Left: Cooking Slots Queue -->
+                    <div class="kitchen-slots-column">
+                        <div class="card" style="padding: 1.25rem; margin-bottom: 0; height: 100%;">
+                            <div class="card-header" style="margin-bottom: 1rem; padding-bottom: 0.75rem;">
+                                <h3 class="card-title" style="font-size: 1.15rem; color: var(--accent-orange);"><i class="ri-time-line"></i> Slots de Preparo</h3>
+                            </div>
+                            
+                            <div class="kitchen-slots-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                <!-- Slot 1 -->
+                                <div class="slot-card" id="kitchen-slot-0">
+                                    <div class="slot-header">
+                                        <span>Slot 1</span>
+                                        <span class="slot-status-badge free" id="slot-status-0">Livre</span>
+                                    </div>
+                                    <div class="slot-body" id="slot-body-0">
+                                        <span class="slot-empty-text">—</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Slot 2 -->
+                                <div class="slot-card" id="kitchen-slot-1">
+                                    <div class="slot-header">
+                                        <span>Slot 2</span>
+                                        <span class="slot-status-badge free" id="slot-status-1">Livre</span>
+                                    </div>
+                                    <div class="slot-body" id="slot-body-1">
+                                        <span class="slot-empty-text">—</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Slot 3 -->
+                                <div class="slot-card" id="kitchen-slot-2">
+                                    <div class="slot-header">
+                                        <span>Slot 3</span>
+                                        <span class="slot-status-badge free" id="slot-status-2">Livre</span>
+                                    </div>
+                                    <div class="slot-body" id="slot-body-2">
+                                        <span class="slot-empty-text">—</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Slot 4 -->
+                                <div class="slot-card" id="kitchen-slot-3">
+                                    <div class="slot-header">
+                                        <span>Slot 4</span>
+                                        <span class="slot-status-badge free" id="slot-status-3">Livre</span>
+                                    </div>
+                                    <div class="slot-body" id="slot-body-3">
+                                        <span class="slot-empty-text">—</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Recipes and Ingredients List -->
+                    <div class="kitchen-recipes-column">
+                        <div class="card" style="padding: 1.5rem; margin-bottom: 0;">
+                            <div class="card-header" style="flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.25rem;">
+                                <h3 class="card-title"><i class="ri-restaurant-line"></i> Livro de Receitas</h3>
+                                <div class="kitchen-search-bar" style="width: 250px;">
+                                    <input type="text" class="kitchen-search-input" id="kitchen-search-input" placeholder="Buscar receita..." oninput="searchKitchenRecipes()">
+                                </div>
+                            </div>
+                            
+                            <div class="kitchen-recipes-list" id="kitchen-recipes-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+            
+            <!-- SECTION 4: IMPRESSORA 3D -->
+            <section id="impressora3d-section" class="dashboard-section">
+                <!-- Base Materials Widget -->
+                <div class="base-mats-widget">
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-instance-line"></i>
+                            <span>Borracha</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="print-mat-borracha">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-instance-line"></i>
+                            <span>Plástico</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="print-mat-plastico">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-instance-line"></i>
+                            <span>Aço de Lâmina</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="print-mat-aco_lamina">0 u.</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" style="color: var(--accent-pink);"><i class="ri-printer-fill"></i> Fila de Fabricação 3D</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Skill: mecanico | XP Req: 150</span>
+                    </div>
+                    
+                    <div class="printer-list" id="printer-recipes-list">
+                        <!-- Dynamically populated via JS -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 5: MOINHO DE REFINO -->
+            <section id="moinho-section" class="dashboard-section">
+                <!-- Base Materials Widget -->
+                <div class="base-mats-widget">
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-seedling-line"></i>
+                            <span>Borracha Bruta</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="moinho-mat-borracha_bruta">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-copper-coin-line"></i>
+                            <span>Lingote de Cobre</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="moinho-mat-cobre_forjado">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-shield-line"></i>
+                            <span>Lingote de Ferro</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="moinho-mat-ferro_forjado">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-sword-line"></i>
+                            <span>Lingote de Aço</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="moinho-mat-aco_forjado">0 u.</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" style="color: var(--accent-orange);"><i class="ri-factory-fill"></i> Moagem e Refino de Componentes</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Skill: mecanico | XP Req: 0</span>
+                    </div>
+                    
+                    <div class="printer-list" id="moinho-recipes-list">
+                        <!-- Dynamically populated via JS -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 6: IMPRESSORA INDUSTRIAL DE PÓ -->
+            <section id="impressorapo-section" class="dashboard-section">
+                <!-- Base Materials Widget -->
+                <div class="base-mats-widget">
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-fire-line"></i>
+                            <span>Pó de Alumínio</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="po-mat-aluminio">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-fire-line"></i>
+                            <span>Pó de Aço</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="po-mat-aco">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-loop-left-line"></i>
+                            <span>Fio de Cobre</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="po-mat-cobre">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-tools-line"></i>
+                            <span>Peças de Arma</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="po-mat-pecas_arma">0 u.</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+                        <h3 class="card-title" style="color: var(--accent-red);"><i class="ri-cpu-fill"></i> Sinterizadora Industrial (DMLS)</h3>
+                        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary); background: rgba(255, 255, 255, 0.02); padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border-color);">
+                                Seu XP: <strong>409</strong> / Requerido: <strong style="color: var(--accent-pink);">700</strong>
+                            </span>
+                            <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--accent-cyan);">
+                                <input type="checkbox" id="bypass-xp-checkbox" onchange="toggleXPBypass()" style="cursor: pointer;">
+                                Modo Admin (Ignorar XP)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="printer-list" id="po-recipes-list">
+                        <!-- Dynamically populated via JS -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 7: GESTÃO DE GASTOS -->
+            <section id="gastos-section" class="dashboard-section">
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>Saldo Atual</h3>
+                            <div class="stats-number" id="finance-balance-val">R$ 0,00</div>
+                        </div>
+                        <i class="ri-bank-card-line stats-icon"></i>
+                    </div>
+                    <div class="stats-card card-green">
+                        <div class="stats-info">
+                            <h3>Receitas Totais</h3>
+                            <div class="stats-number" id="finance-incomes-val" style="color: var(--accent-green);">R$ 0,00</div>
+                        </div>
+                        <i class="ri-arrow-up-circle-line stats-icon"></i>
+                    </div>
+                    <div class="stats-card card-pink">
+                        <div class="stats-info">
+                            <h3>Despesas Totais</h3>
+                            <div class="stats-number" id="finance-expenses-val" style="color: var(--accent-pink);">R$ 0,00</div>
+                        </div>
+                        <i class="ri-arrow-down-circle-line stats-icon"></i>
+                    </div>
+                </div>
+                
+                <div class="content-grid">
+                    <!-- Left: Transaction History -->
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="ri-exchange-funds-line"></i> Histórico de Transações</h3>
+                                <button class="card-action-btn" onclick="clearTransactions()">Limpar Histórico</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Descrição</th>
+                                            <th>Tipo</th>
+                                            <th>Categoria</th>
+                                            <th>Valor</th>
+                                            <th>Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transactions-table-body">
+                                        <!-- Populated via JS -->
+                                    </tbody>
+                                </table>
+                                <div id="no-transactions" class="empty-state" style="display: none;">
+                                    <i class="ri-coin-line"></i>
+                                    <p>Nenhuma transação registrada até o momento.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Add Transaction Form -->
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="ri-add-box-line"></i> Registrar Transação</h3>
+                            </div>
+                            <form id="transaction-form" onsubmit="addTransaction(event)">
+                                <div class="form-group">
+                                    <label class="form-label" for="t-desc">Descrição / Item</label>
+                                    <input type="text" class="form-control" id="t-desc" placeholder="Ex: Compra de Ferro Bruto" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="t-type">Tipo de Operação</label>
+                                    <select class="form-control" id="t-type" required>
+                                        <option value="expense">Despesa (Saída)</option>
+                                        <option value="income">Receita (Entrada)</option>
+                                    </select>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="t-category">Menu / Categoria</label>
+                                        <select class="form-control" id="t-category" required>
+                                            <option value="Mineração">Mineração</option>
+                                            <option value="Cozinha">Cozinha</option>
+                                            <option value="Impressora 3D">Impressora 3D</option>
+                                            <option value="Moinho de Refino">Moinho de Refino</option>
+                                            <option value="Imp. Industrial de Pó">Imp. Industrial de Pó</option>
+                                            <option value="Outros">Outros</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="t-value">Valor (R$)</label>
+                                        <input type="number" step="0.01" class="form-control" id="t-value" placeholder="0.00" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-green btn-block" style="margin-top: 1rem;">
+                                    <i class="ri-add-line"></i> Lançar Transação
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 8: GESTÃO DE ESTOQUE -->
+            <section id="estoque-section" class="dashboard-section">
+                <div class="content-grid single">
+                    <div class="card">
+                        <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+                            <h3 class="card-title"><i class="ri-database-2-line"></i> Controle Geral de Estoque</h3>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <button class="card-action-btn" onclick="filterStock('all')" id="filter-btn-all" style="background: rgba(0, 240, 255, 0.1); border-color: var(--accent-cyan); color: var(--accent-cyan);">Todos</button>
+                                <button class="card-action-btn" onclick="filterStock('raw')" id="filter-btn-raw">Brutos</button>
+                                <button class="card-action-btn" onclick="filterStock('forged')" id="filter-btn-forged">Forjados</button>
+                                <button class="card-action-btn" onclick="filterStock('other')" id="filter-btn-other">Outros</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Categoria</th>
+                                        <th>Tipo</th>
+                                        <th>Quantidade</th>
+                                        <th>Nível de Estoque</th>
+                                        <th>Ajustar</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stock-table-body">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Add Custom Item Form (so the user can start building up their kitchen/3D items manually before uploading photos!) -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="ri-add-circle-line"></i> Cadastrar Novo Item Personalizado</h3>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+                            Adicione novos itens criados na Cozinha, Impressoras ou Moinho para gerenciar o estoque deles antes da automação completa por receitas.
+                        </p>
+                        <form id="custom-item-form" onsubmit="addCustomStockItem(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="item-name">Nome do Item</label>
+                                    <input type="text" class="form-control" id="item-name" placeholder="Ex: Hambúrguer Premium, Biela Reforçada" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="item-category">Categoria / Menu</label>
+                                    <select class="form-control" id="item-category" required>
+                                        <option value="cozinha">Cozinha</option>
+                                        <option value="impressora3d">Impressora 3D</option>
+                                        <option value="moinho">Moinho de Refino</option>
+                                        <option value="impressorapo">Imp. Industrial de Pó</option>
+                                        <option value="mineracao">Mineração</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="item-qty">Quantidade Inicial</label>
+                                    <input type="number" class="form-control" id="item-qty" value="0" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="item-min">Mínimo para Alerta (Estoque Crítico)</label>
+                                    <input type="number" class="form-control" id="item-min" value="10" min="0" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-cyan btn-block" style="margin-top: 1rem;">
+                                <i class="ri-add-line"></i> Cadastrar Item no Estoque
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            
+        </main>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js?v=2.1.2"></script>
+</body>
+</html>
