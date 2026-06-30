@@ -7,7 +7,7 @@
     
     <!-- Google Fonts & Remix Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=2.1.2">
+    <link rel="stylesheet" href="style.css?v=2.2.0">
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -70,6 +70,12 @@
                     <a class="nav-link link-orange" onclick="switchSection('mineracao')" id="nav-mineracao">
                         <i class="ri-copper-diamond-line"></i>
                         <span>Mineração</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-orange" onclick="switchSection('calc-compra')" id="nav-calc-compra">
+                        <i class="ri-calculator-line"></i>
+                        <span>Compra de Minérios</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -152,6 +158,26 @@
                         <span class="status-indicator"></span>
                         <span>S6 Servidor Online</span>
                     </div>
+
+                    <!-- XP Widget -->
+                    <div class="xp-widget" title="Digite seu XP atual para desbloquear receitas">
+                        <div class="xp-widget-icon"><i class="ri-flashlight-fill"></i></div>
+                        <div class="xp-widget-body">
+                            <span class="xp-widget-label">Seu XP</span>
+                            <input
+                                type="number"
+                                id="header-xp-input"
+                                class="xp-widget-input"
+                                value="0"
+                                min="0"
+                                placeholder="0"
+                                oninput="setPlayerXP(this.value)"
+                                title="Informe seu XP atual no servidor"
+                            >
+                        </div>
+                        <span class="xp-widget-badge" id="header-xp-badge">XP: 0</span>
+                    </div>
+
                     <div class="finance-badge" id="header-balance">
                         Saldo: R$ 0,00
                     </div>
@@ -248,6 +274,145 @@
                             <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
                                 <strong>Dica de Navegação:</strong> Utilize o menu lateral esquerdo para alternar entre os departamentos ou digite no <strong>Buscador HUD</strong> no topo do site para ir diretamente à receita da peça que deseja fabricar.
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 1B: CALCULADORA DE COMPRA DE MINÉRIOS -->
+            <section id="calc-compra-section" class="dashboard-section">
+                <div class="content-grid">
+                    <!-- Left Column: Mineral Shopping List -->
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="ri-calculator-line"></i> Tabela de Preços e Compra de Minérios</h3>
+                                <span style="font-size: 0.8rem; color: var(--accent-orange);">Cotação S6 Fixa</span>
+                            </div>
+                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.88rem;">Selecione a quantidade de cada liga metálica que deseja comprar. A confirmação de compra atualizará automaticamente o saldo financeiro do clube e abastecerá o inventário.</p>
+                            
+                            <div class="material-list">
+                                <!-- Cobre -->
+                                <div class="material-item" style="padding: 1rem;">
+                                    <div class="material-meta" style="gap: 1rem;">
+                                        <div class="material-icon-box" style="background: rgba(255, 94, 0, 0.05); color: var(--accent-orange); border-color: rgba(255, 94, 0, 0.15);">CU+</div>
+                                        <div>
+                                            <div class="material-name">Cobre Forjado</div>
+                                            <div class="material-sub">Preço Unitário: <strong>$182</strong></div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="width: 100px;">
+                                            <input type="number" class="form-control mineral-buy-input" id="buy-qty-cobre_forjado" value="0" min="0" data-price="182" data-name="Cobre Forjado" oninput="calculateMineralBuyTotal()" style="text-align: center;">
+                                        </div>
+                                        <div style="width: 90px; text-align: right; font-family: var(--font-display); font-weight: 700; color: var(--text-primary);" id="buy-subtotal-cobre_forjado">$0</div>
+                                    </div>
+                                </div>
+
+                                <!-- Ferro -->
+                                <div class="material-item" style="padding: 1rem;">
+                                    <div class="material-meta" style="gap: 1rem;">
+                                        <div class="material-icon-box" style="background: rgba(255, 255, 255, 0.05); color: var(--text-primary); border-color: rgba(255, 255, 255, 0.15);">FE+</div>
+                                        <div>
+                                            <div class="material-name">Ferro Forjado</div>
+                                            <div class="material-sub">Preço Unitário: <strong>$400</strong></div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="width: 100px;">
+                                            <input type="number" class="form-control mineral-buy-input" id="buy-qty-ferro_forjado" value="0" min="0" data-price="400" data-name="Ferro Forjado" oninput="calculateMineralBuyTotal()" style="text-align: center;">
+                                        </div>
+                                        <div style="width: 90px; text-align: right; font-family: var(--font-display); font-weight: 700; color: var(--text-primary);" id="buy-subtotal-ferro_forjado">$0</div>
+                                    </div>
+                                </div>
+
+                                <!-- Prata -->
+                                <div class="material-item" style="padding: 1rem;">
+                                    <div class="material-meta" style="gap: 1rem;">
+                                        <div class="material-icon-box" style="background: rgba(255, 255, 255, 0.05); color: #e0e0e0; border-color: rgba(255, 255, 255, 0.15);">AG+</div>
+                                        <div>
+                                            <div class="material-name">Prata Forjado</div>
+                                            <div class="material-sub">Preço Unitário: <strong>$1.200</strong></div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="width: 100px;">
+                                            <input type="number" class="form-control mineral-buy-input" id="buy-qty-prata_forjado" value="0" min="0" data-price="1200" data-name="Prata Forjado" oninput="calculateMineralBuyTotal()" style="text-align: center;">
+                                        </div>
+                                        <div style="width: 90px; text-align: right; font-family: var(--font-display); font-weight: 700; color: var(--text-primary);" id="buy-subtotal-prata_forjado">$0</div>
+                                    </div>
+                                </div>
+
+                                <!-- Aço -->
+                                <div class="material-item" style="padding: 1rem;">
+                                    <div class="material-meta" style="gap: 1rem;">
+                                        <div class="material-icon-box" style="background: rgba(0, 240, 255, 0.05); color: var(--accent-cyan); border-color: rgba(0, 240, 255, 0.15);">AC+</div>
+                                        <div>
+                                            <div class="material-name">Aço Forjado</div>
+                                            <div class="material-sub">Preço Unitário: <strong>$2.000</strong></div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="width: 100px;">
+                                            <input type="number" class="form-control mineral-buy-input" id="buy-qty-aco_forjado" value="0" min="0" data-price="2000" data-name="Aço Forjado" oninput="calculateMineralBuyTotal()" style="text-align: center;">
+                                        </div>
+                                        <div style="width: 90px; text-align: right; font-family: var(--font-display); font-weight: 700; color: var(--text-primary);" id="buy-subtotal-aco_forjado">$0</div>
+                                    </div>
+                                </div>
+
+                                <!-- Titânio -->
+                                <div class="material-item" style="padding: 1rem;">
+                                    <div class="material-meta" style="gap: 1rem;">
+                                        <div class="material-icon-box" style="background: rgba(255, 51, 51, 0.05); color: var(--accent-red); border-color: rgba(255, 51, 51, 0.15);">TI+</div>
+                                        <div>
+                                            <div class="material-name">Titânio Forjado</div>
+                                            <div class="material-sub">Preço Unitário: <strong>$3.500</strong></div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="width: 100px;">
+                                            <input type="number" class="form-control mineral-buy-input" id="buy-qty-titanio_forjado" value="0" min="0" data-price="3500" data-name="Titânio Forjado" oninput="calculateMineralBuyTotal()" style="text-align: center;">
+                                        </div>
+                                        <div style="width: 90px; text-align: right; font-family: var(--font-display); font-weight: 700; color: var(--text-primary);" id="buy-subtotal-titanio_forjado">$0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Cost and Balance Summary -->
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="ri-shopping-cart-fill"></i> Resumo da Compra</h3>
+                            </div>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 1.25rem; margin-top: 0.5rem;">
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                                    <span style="color: var(--text-secondary);">Saldo em Caixa:</span>
+                                    <span style="font-family: var(--font-display); font-weight: 700; color: var(--accent-green);" id="buy-current-balance">R$ 0,00</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                                    <span style="color: var(--text-secondary);">Total de Itens:</span>
+                                    <span style="font-weight: 600;" id="buy-total-items-qty">0 u.</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                                    <span style="color: var(--text-secondary);">Custo Total da Compra:</span>
+                                    <span style="font-family: var(--font-display); font-weight: 700; color: var(--accent-red);" id="buy-total-cost">$0,00</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                                    <span style="color: var(--text-secondary);">Saldo Restante:</span>
+                                    <span style="font-family: var(--font-display); font-weight: 700; color: var(--accent-cyan);" id="buy-remaining-balance">R$ 0,00</span>
+                                </div>
+                                
+                                <div id="buy-warning-msg" style="display: none; padding: 0.75rem; background: rgba(255, 51, 51, 0.1); border: 1px solid rgba(255, 51, 51, 0.2); border-radius: 6px; font-size: 0.8rem; color: var(--accent-red); text-align: center;">
+                                    <i class="ri-error-warning-fill"></i> Saldo insuficiente para realizar a compra.
+                                </div>
+
+                                <button class="btn btn-cyan btn-block btn-lg" id="buy-confirm-btn" onclick="confirmMineralPurchase()" style="margin-top: 0.5rem;">
+                                    <i class="ri-check-double-line"></i> Confirmar Compra
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -720,6 +885,6 @@
     </div>
 
     <!-- Application Script -->
-    <script src="app.js?v=2.1.2"></script>
+    <script src="app.js?v=2.2.0"></script>
 </body>
 </html>

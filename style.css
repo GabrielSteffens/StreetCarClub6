@@ -322,6 +322,76 @@ body {
     box-shadow: var(--neon-glow-cyan);
 }
 
+/* XP Widget */
+.xp-widget {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 200, 0, 0.06);
+    border: 1px solid rgba(255, 200, 0, 0.22);
+    border-radius: 30px;
+    padding: 0.35rem 0.9rem 0.35rem 0.6rem;
+    box-shadow: 0 0 12px rgba(255, 200, 0, 0.08), 0 0 24px rgba(255, 200, 0, 0.04);
+    cursor: default;
+    transition: var(--transition);
+}
+.xp-widget:hover {
+    border-color: rgba(255, 200, 0, 0.45);
+    box-shadow: 0 0 16px rgba(255, 200, 0, 0.18), 0 0 32px rgba(255, 200, 0, 0.08);
+}
+.xp-widget-icon {
+    font-size: 1.1rem;
+    color: #ffc800;
+    filter: drop-shadow(0 0 6px rgba(255, 200, 0, 0.6));
+    line-height: 1;
+}
+.xp-widget-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.xp-widget-label {
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: rgba(255, 200, 0, 0.7);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    line-height: 1;
+}
+.xp-widget-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    width: 80px;
+    padding: 0;
+    line-height: 1.2;
+    -moz-appearance: textfield;
+}
+.xp-widget-input::-webkit-inner-spin-button,
+.xp-widget-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.xp-widget-input::placeholder {
+    color: rgba(255,255,255,0.2);
+}
+.xp-widget-badge {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #ffc800;
+    background: rgba(255, 200, 0, 0.12);
+    border: 1px solid rgba(255, 200, 0, 0.2);
+    border-radius: 20px;
+    padding: 0.15rem 0.6rem;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
 /* Sections */
 .dashboard-section {
     display: none; /* Controlled by JS */

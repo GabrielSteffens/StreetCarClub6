@@ -38,6 +38,7 @@ function getStockQty(itemId) {
 let state = {
     balance: 15000.00,
     bypassXP: false,
+    playerXP: 0,
     transactions: [
         {
             id: 't-init-1',
@@ -468,9 +469,23 @@ function getZeroedState() {
     return {
         balance: 0.00,
         bypassXP: false,
+        playerXP: 0,
         transactions: [],
         inventory: zeroedInventory
     };
+}
+
+function setPlayerXP(value) {
+    const xp = Math.max(0, parseInt(value) || 0);
+    state.playerXP = xp;
+    // Update XP badge visual
+    const badge = document.getElementById('header-xp-badge');
+    if (badge) badge.textContent = `XP: ${xp.toLocaleString('pt-BR')}`;
+    saveToLocalStorage();
+    // Re-render all sections that use XP gating (always, so navigating to them shows the updated state)
+    renderPrinterPo();
+    renderPrinter3D();
+    renderMoinho();
 }
 
 async function loadUserData() {
@@ -501,6 +516,7 @@ async function loadUserData() {
                     
                     state.balance = defaultData.balance;
                     state.bypassXP = defaultData.bypassXP;
+                    state.playerXP = defaultData.playerXP || 0;
                     state.transactions = defaultData.transactions;
                     state.inventory = defaultData.inventory;
                 } else {
@@ -510,6 +526,7 @@ async function loadUserData() {
                 const parsed = data.data;
                 state.balance = parsed.balance;
                 state.bypassXP = parsed.bypassXP || false;
+                state.playerXP = parsed.playerXP || 0;
                 state.transactions = parsed.transactions || [];
                 
                 // Merge inventory with defaults
@@ -545,6 +562,7 @@ function loadUserDataLocal() {
             const parsed = JSON.parse(saved);
             state.balance = parsed.balance;
             state.bypassXP = parsed.bypassXP || false;
+            state.playerXP = parsed.playerXP || 0;
             state.transactions = parsed.transactions || [];
             
             const defaultInventoryMap = new Map(state.inventory.map(item => [item.id, item]));
@@ -566,6 +584,7 @@ function loadUserDataLocal() {
         const defaultData = getZeroedState();
         state.balance = defaultData.balance;
         state.bypassXP = defaultData.bypassXP;
+        state.playerXP = defaultData.playerXP;
         state.transactions = defaultData.transactions;
         state.inventory = defaultData.inventory;
         // Save immediately
@@ -580,7 +599,8 @@ async function saveUserData() {
         balance: state.balance,
         inventory: state.inventory,
         transactions: state.transactions,
-        bypassXP: state.bypassXP
+        bypassXP: state.bypassXP,
+        playerXP: state.playerXP
     };
     
     // Save locally always as backup
@@ -632,6 +652,12 @@ function updateUI() {
     
     if (headerBal) headerBal.textContent = `Saldo: ${formattedBalance}`;
     if (dashBal) dashBal.textContent = formattedBalance;
+
+    // Sync XP header field with saved state
+    const xpInput = document.getElementById('header-xp-input');
+    const xpBadge = document.getElementById('header-xp-badge');
+    if (xpInput) xpInput.value = state.playerXP || 0;
+    if (xpBadge) xpBadge.textContent = `XP: ${(state.playerXP || 0).toLocaleString('pt-BR')}`;
     
     const totalItems = state.inventory.reduce((acc, curr) => acc + curr.qty, 0);
     if (dashTot) dashTot.textContent = `${totalItems} u.`;
@@ -667,6 +693,13 @@ function updateUI() {
     renderCozinha();
     renderMoinho();
     renderPrinterPo();
+    
+    // Update mineral purchase calculator balance
+    const calcBal = document.getElementById('buy-current-balance');
+    if (calcBal) {
+        calcBal.innerText = formatCurrency(state.balance);
+        calculateMineralBuyTotal();
+    }
 }
 
 // Format number as currency (BRL)
@@ -679,7 +712,7 @@ function formatCurrency(value) {
 
 // Switch Sections (SPA navigation)
 function switchSection(sectionId) {
-    const sections = ['dashboard', 'mineracao', 'cozinha', 'impressora3d', 'moinho', 'impressorapo', 'gastos', 'estoque'];
+    const sections = ['dashboard', 'mineracao', 'cozinha', 'impressora3d', 'moinho', 'impressorapo', 'gastos', 'estoque', 'calc-compra'];
     
     sections.forEach(sec => {
         const elem = document.getElementById(`${sec}-section`);
@@ -704,6 +737,10 @@ function switchSection(sectionId) {
         case 'mineracao':
             headerTitle.textContent = "Mineração S6";
             headerDesc.textContent = "Gestão de minérios brutos e processador de refinamento de ligas metálicas.";
+            break;
+        case 'calc-compra':
+            headerTitle.textContent = "Compra de Minérios";
+            headerDesc.textContent = "Calculadora e abastecimento de estoque com cotação de minérios S6.";
             break;
         case 'cozinha':
             headerTitle.textContent = "Cozinha Industrial";
@@ -922,6 +959,8 @@ function renderPrinter3D() {
     
     printerRecipes.forEach(recipe => {
         const currentStock = getStockQty(recipe.id);
+        const userXP = state.playerXP || 0;
+        const isLocked = !state.bypassXP && userXP < recipe.xp;
         
         let ingredientsHTML = '';
         let canPrint = true;
@@ -938,14 +977,30 @@ function renderPrinter3D() {
             ingredientsHTML += `<span class="recipe-ingredient-tag ${statusClass}">${reqQty}x ${matName} (${currentMatStock})</span>`;
         }
         
+        const lockIcon = isLocked ? `<i class="ri-lock-line" style="color: var(--accent-pink); margin-right: 4px;"></i>` : '';
+        const cardStyle = isLocked ? `opacity: 0.65; border-left-color: var(--accent-pink);` : ``;
+        const xpPct = recipe.xp > 0 ? Math.min(100, Math.round((userXP / recipe.xp) * 100)) : 100;
+        const xpMissing = recipe.xp - userXP;
+        const lockBadge = isLocked
+            ? `<span class="slot-status-badge free" style="background: rgba(255,0,127,0.08); color: var(--accent-pink); border-color: rgba(255,0,127,0.25); font-weight:700; display:inline-flex; flex-direction:column; gap:3px; padding: 4px 10px; border-radius: 8px;">
+                 <span style="font-size:0.75rem;">🔒 ${userXP} / ${recipe.xp} XP &mdash; faltam <strong>${xpMissing}</strong></span>
+                 <span style="display:block; width:120px; height:4px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;">
+                   <span style="display:block; width:${xpPct}%; height:100%; background: var(--accent-pink); border-radius:4px;"></span>
+                 </span>
+               </span>`
+            : '';
+        const printButton = isLocked
+            ? `<button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; cursor: not-allowed;" disabled><i class="ri-lock-line"></i> Bloqueado</button>`
+            : `<button class="btn btn-pink" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="craft3DItem('${recipe.id}')"><i class="ri-play-fill"></i> Imprimir</button>`;
+        
         const cardHTML = `
-            <div class="printer-card">
+            <div class="printer-card" style="${cardStyle}">
                 <div class="printer-card-left">
                     <div class="printer-card-icon-box">
                         <i class="ri-printer-line"></i>
                     </div>
                     <div class="printer-card-info">
-                        <h4 style="font-style: italic;">${recipe.name}</h4>
+                        <h4 style="font-style: italic; display: flex; align-items: center;">${lockIcon} ${recipe.name} &nbsp; ${lockBadge}</h4>
                         <div class="printer-card-meta">
                             Tempo: <strong>${recipe.time}</strong> | Materiais: ${ingredientsHTML}<br>
                             Skill: <strong>${recipe.skill}</strong> | XP Req: <strong>${recipe.xp}</strong> | No estoque: <strong style="color: var(--accent-cyan);">${currentStock} u.</strong>
@@ -955,10 +1010,8 @@ function renderPrinter3D() {
                 
                 <div class="printer-card-actions">
                     <div style="display: flex; gap: 4px; align-items: center;">
-                        <input type="number" id="print-qty-${recipe.id}" value="1" min="1" style="width: 50px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: #fff; padding: 4px; border-radius: 4px; text-align: center;">
-                        <button class="btn btn-pink" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="craft3DItem('${recipe.id}')">
-                            <i class="ri-play-fill"></i> Imprimir
-                        </button>
+                        <input type="number" id="print-qty-${recipe.id}" value="1" min="1" style="width: 50px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: #fff; padding: 4px; border-radius: 4px; text-align: center;" ${isLocked ? 'disabled' : ''}>
+                        ${printButton}
                     </div>
                 </div>
             </div>
@@ -970,6 +1023,13 @@ function renderPrinter3D() {
 function craft3DItem(recipeId) {
     const recipe = printerRecipes.find(r => r.id === recipeId);
     if (!recipe) return;
+    
+    // XP check
+    const userXP = state.playerXP || 0;
+    if (!state.bypassXP && userXP < recipe.xp) {
+        showToast(`XP insuficiente! Este item requer ${recipe.xp} XP.`, 'error');
+        return;
+    }
     
     const qtyInput = document.getElementById(`print-qty-${recipeId}`);
     const multiplier = parseInt(qtyInput.value) || 1;
@@ -1265,6 +1325,8 @@ function renderMoinho() {
     
     moinhoRecipes.forEach(recipe => {
         const currentStock = getStockQty(recipe.id);
+        const userXP = state.playerXP || 0;
+        const isLocked = !state.bypassXP && userXP < recipe.xp;
         
         let ingredientsHTML = '';
         let canRefine = true;
@@ -1281,14 +1343,30 @@ function renderMoinho() {
             ingredientsHTML += `<span class="recipe-ingredient-tag ${statusClass}">${reqQty}x ${matName} (${currentMatStock})</span>`;
         }
         
+        const lockIcon = isLocked ? `<i class="ri-lock-line" style="color: var(--accent-orange); margin-right: 4px;"></i>` : '';
+        const cardStyle = isLocked ? `opacity: 0.65; border-left-color: var(--accent-orange);` : `border-left-color: var(--accent-orange);`;
+        const xpPct = recipe.xp > 0 ? Math.min(100, Math.round((userXP / recipe.xp) * 100)) : 100;
+        const xpMissing = recipe.xp - userXP;
+        const lockBadge = isLocked
+            ? `<span class="slot-status-badge free" style="background: rgba(255,94,0,0.08); color: var(--accent-orange); border-color: rgba(255,94,0,0.25); font-weight:700; display:inline-flex; flex-direction:column; gap:3px; padding: 4px 10px; border-radius: 8px;">
+                 <span style="font-size:0.75rem;">🔒 ${userXP} / ${recipe.xp} XP &mdash; faltam <strong>${xpMissing}</strong></span>
+                 <span style="display:block; width:120px; height:4px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;">
+                   <span style="display:block; width:${xpPct}%; height:100%; background: var(--accent-orange); border-radius:4px;"></span>
+                 </span>
+               </span>`
+            : '';
+        const refineButton = isLocked
+            ? `<button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; cursor: not-allowed;" disabled><i class="ri-lock-line"></i> Bloqueado</button>`
+            : `<button class="btn btn-orange" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="craftMoinhoItem('${recipe.id}')"><i class="ri-refresh-line"></i> Refinar</button>`;
+        
         const cardHTML = `
-            <div class="printer-card" style="border-left-color: var(--accent-orange);">
+            <div class="printer-card" style="${cardStyle}">
                 <div class="printer-card-left">
                     <div class="printer-card-icon-box" style="background: rgba(255, 94, 0, 0.07); border-color: rgba(255, 94, 0, 0.15); color: var(--accent-orange); filter: drop-shadow(0 0 4px rgba(255, 94, 0, 0.3));">
                         <i class="ri-factory-line"></i>
                     </div>
                     <div class="printer-card-info">
-                        <h4 style="font-style: italic;">${recipe.name}</h4>
+                        <h4 style="font-style: italic; display: flex; align-items: center;">${lockIcon} ${recipe.name} &nbsp; ${lockBadge}</h4>
                         <div class="printer-card-meta">
                             Tempo: <strong>${recipe.time}</strong> | Materiais: ${ingredientsHTML}<br>
                             Skill: <strong>${recipe.skill}</strong> | XP Req: <strong>${recipe.xp}</strong> | No estoque: <strong style="color: var(--accent-orange);">${currentStock} u.</strong>
@@ -1298,10 +1376,8 @@ function renderMoinho() {
                 
                 <div class="printer-card-actions">
                     <div style="display: flex; gap: 4px; align-items: center;">
-                        <input type="number" id="moinho-qty-${recipe.id}" value="1" min="1" style="width: 50px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: #fff; padding: 4px; border-radius: 4px; text-align: center;">
-                        <button class="btn btn-orange" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="craftMoinhoItem('${recipe.id}')">
-                            <i class="ri-refresh-line"></i> Refinar
-                        </button>
+                        <input type="number" id="moinho-qty-${recipe.id}" value="1" min="1" style="width: 50px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: #fff; padding: 4px; border-radius: 4px; text-align: center;" ${isLocked ? 'disabled' : ''}>
+                        ${refineButton}
                     </div>
                 </div>
             </div>
@@ -1313,6 +1389,13 @@ function renderMoinho() {
 function craftMoinhoItem(recipeId) {
     const recipe = moinhoRecipes.find(r => r.id === recipeId);
     if (!recipe) return;
+    
+    // XP check
+    const userXP = state.playerXP || 0;
+    if (!state.bypassXP && userXP < recipe.xp) {
+        showToast(`XP insuficiente! Este item requer ${recipe.xp} XP.`, 'error');
+        return;
+    }
     
     const qtyInput = document.getElementById(`moinho-qty-${recipeId}`);
     const multiplier = parseInt(qtyInput.value) || 1;
@@ -1415,7 +1498,7 @@ function renderPrinterPo() {
     if (!recipesContainer) return;
     recipesContainer.innerHTML = '';
     
-    const userXP = 409;
+    const userXP = state.playerXP || 0;
     
     poRecipes.forEach(recipe => {
         const currentStock = getStockQty(recipe.id);
@@ -1436,10 +1519,18 @@ function renderPrinterPo() {
             ingredientsHTML += `<span class="recipe-ingredient-tag ${statusClass}">${reqQty}x ${matName} (${currentMatStock})</span>`;
         }
         
-        // Locked display classes
         const lockIcon = isLocked ? `<i class="ri-lock-line" style="color: var(--accent-red); margin-right: 4px;"></i>` : '';
         const cardStyle = isLocked ? `opacity: 0.65; border-left-color: var(--accent-red);` : `border-left-color: var(--accent-red);`;
-        const lockBadge = isLocked ? `<span class="slot-status-badge free" style="background: rgba(255,51,51,0.1); color: var(--accent-red); border-color: rgba(255,51,51,0.2); font-weight:700;">Bloqueado (Req: ${recipe.xp} XP)</span>` : '';
+        const xpPct = recipe.xp > 0 ? Math.min(100, Math.round((userXP / recipe.xp) * 100)) : 100;
+        const xpMissing = recipe.xp - userXP;
+        const lockBadge = isLocked
+            ? `<span class="slot-status-badge free" style="background: rgba(255,51,51,0.08); color: var(--accent-red); border-color: rgba(255,51,51,0.25); font-weight:700; display:inline-flex; flex-direction:column; gap:3px; padding: 4px 10px; border-radius: 8px;">
+                 <span style="font-size:0.75rem;">🔒 ${userXP} / ${recipe.xp} XP &mdash; faltam <strong>${xpMissing}</strong></span>
+                 <span style="display:block; width:120px; height:4px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;">
+                   <span style="display:block; width:${xpPct}%; height:100%; background: var(--accent-red); border-radius:4px;"></span>
+                 </span>
+               </span>`
+            : '';
         const printButton = isLocked
             ? `<button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; cursor: not-allowed;" disabled><i class="ri-lock-line"></i> Bloqueado</button>`
             : `<button class="btn btn-orange" style="background: linear-gradient(135deg, var(--accent-red), #cc0000); color: #fff; box-shadow: 0 4px 10px rgba(255,51,51,0.2); padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="craftPoItem('${recipe.id}')"><i class="ri-cpu-line"></i> Sinterizar</button>`;
@@ -1476,7 +1567,7 @@ function craftPoItem(recipeId) {
     if (!recipe) return;
     
     // Check lock again to prevent console hacking if Admin Mode is OFF
-    const userXP = 409;
+    const userXP = state.playerXP || 0;
     if (!state.bypassXP && userXP < recipe.xp) {
         showToast("Seu XP é insuficiente para este item.", "error");
         return;
@@ -2057,6 +2148,121 @@ function navigateToSearchItem(sectionId, itemName) {
             }, 2000);
         }
     }, 200);
+}
+
+// Ores Purchase Calculator System
+function calculateMineralBuyTotal() {
+    const inputs = document.querySelectorAll('.mineral-buy-input');
+    let totalItems = 0;
+    let totalCost = 0;
+    
+    inputs.forEach(input => {
+        const qty = Math.max(0, parseInt(input.value) || 0);
+        // Force the input value to be non-negative in the UI too
+        if (input.value !== '' && qty !== parseInt(input.value)) {
+            input.value = qty;
+        }
+        
+        const price = parseFloat(input.dataset.price) || 0;
+        const subtotal = qty * price;
+        totalItems += qty;
+        totalCost += subtotal;
+        
+        const subtotalEl = document.getElementById(`buy-subtotal-${input.id.replace('buy-qty-', '')}`);
+        if (subtotalEl) {
+            subtotalEl.innerText = formatCurrency(subtotal);
+        }
+    });
+    
+    const buyTotalQty = document.getElementById('buy-total-items-qty');
+    const buyTotalCost = document.getElementById('buy-total-cost');
+    const buyRemainingBal = document.getElementById('buy-remaining-balance');
+    const buyWarningMsg = document.getElementById('buy-warning-msg');
+    const buyConfirmBtn = document.getElementById('buy-confirm-btn');
+    
+    if (buyTotalQty) buyTotalQty.innerText = `${totalItems} u.`;
+    if (buyTotalCost) buyTotalCost.innerText = formatCurrency(totalCost);
+    
+    const remainingBalance = state.balance - totalCost;
+    if (buyRemainingBal) buyRemainingBal.innerText = formatCurrency(remainingBalance);
+    
+    if (remainingBalance < 0) {
+        if (buyWarningMsg) buyWarningMsg.style.display = 'block';
+        if (buyConfirmBtn) {
+            buyConfirmBtn.disabled = true;
+            buyConfirmBtn.style.opacity = '0.5';
+            buyConfirmBtn.style.cursor = 'not-allowed';
+        }
+    } else {
+        if (buyWarningMsg) buyWarningMsg.style.display = 'none';
+        if (buyConfirmBtn) {
+            buyConfirmBtn.disabled = false;
+            buyConfirmBtn.style.opacity = '1';
+            buyConfirmBtn.style.cursor = 'pointer';
+        }
+    }
+}
+
+async function confirmMineralPurchase() {
+    const inputs = document.querySelectorAll('.mineral-buy-input');
+    let totalCost = 0;
+    let totalItems = 0;
+    let itemsToBuy = [];
+    
+    inputs.forEach(input => {
+        const qty = Math.max(0, parseInt(input.value) || 0);
+        if (qty > 0) {
+            const itemId = input.id.replace('buy-qty-', '');
+            const price = parseFloat(input.dataset.price) || 0;
+            const name = input.dataset.name || '';
+            totalCost += qty * price;
+            totalItems += qty;
+            itemsToBuy.push({ id: itemId, qty: qty, name: name });
+        }
+    });
+    
+    if (totalItems === 0) {
+        showToast("Por favor, selecione pelo menos 1 item para comprar.", "warning");
+        return;
+    }
+    
+    if (state.balance < totalCost) {
+        showToast("Saldo insuficiente no caixa do clube!", "error");
+        return;
+    }
+    
+    // Deduct balance
+    state.balance -= totalCost;
+    
+    // Add to inventory
+    itemsToBuy.forEach(item => {
+        const invItem = state.inventory.find(i => i.id === item.id);
+        if (invItem) {
+            invItem.qty += item.qty;
+        }
+    });
+    
+    // Register financial transaction
+    const itemNames = itemsToBuy.map(i => `${i.name} x${i.qty}`).join(', ');
+    const transaction = {
+        id: 't-' + Date.now(),
+        desc: `Compra de Minérios: ${itemNames}`,
+        type: 'expense',
+        category: 'Mineracao',
+        value: totalCost,
+        date: new Date().toISOString()
+    };
+    state.transactions.unshift(transaction);
+    
+    // Reset inputs
+    inputs.forEach(input => {
+        input.value = 0;
+    });
+    
+    // Save, sync, and reload UI
+    updateUI();
+    
+    showToast("Compra realizada! Estoque abastecido.", "success");
 }
 
 // Auto-run initialization on script load
