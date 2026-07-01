@@ -34,6 +34,30 @@ function getStockQty(itemId) {
     return item ? item.qty : 0;
 }
 
+// Helper to calculate total quantity of a recipe/item that can be created based on materials in stock
+function getMaxCraftableQty(recipe) {
+    if (!state || !state.inventory) return 0;
+    
+    // Support both 'ingredients' (Kitchen) and 'materials' (3D, Moinho, Po)
+    const ingredients = recipe.ingredients || recipe.materials;
+    if (!ingredients || Object.keys(ingredients).length === 0) return 0;
+    
+    let maxCrafts = Infinity;
+    for (const [matId, reqQty] of Object.entries(ingredients)) {
+        const currentMatStock = getStockQty(matId);
+        const possible = Math.floor(currentMatStock / reqQty);
+        if (possible < maxCrafts) {
+            maxCrafts = possible;
+        }
+    }
+    
+    if (maxCrafts === Infinity) return 0;
+    
+    // Result quantity per craft (defaults to 1 if not specified)
+    const yieldPerCraft = recipe.resultQty || 1;
+    return maxCrafts * yieldPerCraft;
+}
+
 // State Management
 let state = {
     balance: 15000.00,
@@ -977,6 +1001,11 @@ function renderPrinter3D() {
             ingredientsHTML += `<span class="recipe-ingredient-tag ${statusClass}">${reqQty}x ${matName} (${currentMatStock})</span>`;
         }
         
+        const maxCraftable = getMaxCraftableQty(recipe);
+        const maxCraftableText = maxCraftable > 0 
+            ? `<strong style="color: var(--accent-green);">${maxCraftable} u.</strong>` 
+            : `<span style="color: var(--text-muted); font-weight: normal;">0 u.</span>`;
+        
         const lockIcon = isLocked ? `<i class="ri-lock-line" style="color: var(--accent-pink); margin-right: 4px;"></i>` : '';
         const cardStyle = isLocked ? `opacity: 0.65; border-left-color: var(--accent-pink);` : ``;
         const xpPct = recipe.xp > 0 ? Math.min(100, Math.round((userXP / recipe.xp) * 100)) : 100;
@@ -1003,7 +1032,7 @@ function renderPrinter3D() {
                         <h4 style="font-style: italic; display: flex; align-items: center;">${lockIcon} ${recipe.name} &nbsp; ${lockBadge}</h4>
                         <div class="printer-card-meta">
                             Tempo: <strong>${recipe.time}</strong> | Materiais: ${ingredientsHTML}<br>
-                            Skill: <strong>${recipe.skill}</strong> | XP Req: <strong>${recipe.xp}</strong> | No estoque: <strong style="color: var(--accent-cyan);">${currentStock} u.</strong>
+                            Skill: <strong>${recipe.skill}</strong> | XP Req: <strong>${recipe.xp}</strong> | No estoque: <strong style="color: var(--accent-cyan);">${currentStock} u.</strong> | Pode imprimir: ${maxCraftableText}
                         </div>
                     </div>
                 </div>
@@ -1173,6 +1202,11 @@ function renderCozinha() {
             ingredientsHTML += `<span class="recipe-ingredient-tag ${statusClass}">${reqQty}x ${matName} (${currentMatStock})</span>`;
         }
         
+        const maxCraftable = getMaxCraftableQty(recipe);
+        const maxCraftableText = maxCraftable > 0 
+            ? `<strong style="color: var(--accent-green);">${maxCraftable} u.</strong>` 
+            : `<span style="color: var(--text-muted); font-weight: normal;">0 u.</span>`;
+            
         const cardHTML = `
             <div class="kitchen-recipe-card">
                 <div>
@@ -1181,7 +1215,7 @@ function renderCozinha() {
                     </div>
                     <div class="kitchen-recipe-body">
                         Ingredientes: <div style="margin: 0.25rem 0;">${ingredientsHTML}</div>
-                        No estoque: <strong style="color: var(--accent-pink);">${currentStock} u.</strong>
+                        No estoque: <strong style="color: var(--accent-pink);">${currentStock} u.</strong> | Pode preparar: ${maxCraftableText}
                     </div>
                 </div>
                 
@@ -1343,6 +1377,11 @@ function renderMoinho() {
             ingredientsHTML += `<span class="recipe-ingredient-tag ${statusClass}">${reqQty}x ${matName} (${currentMatStock})</span>`;
         }
         
+        const maxCraftable = getMaxCraftableQty(recipe);
+        const maxCraftableText = maxCraftable > 0 
+            ? `<strong style="color: var(--accent-green);">${maxCraftable} u.</strong>` 
+            : `<span style="color: var(--text-muted); font-weight: normal;">0 u.</span>`;
+        
         const lockIcon = isLocked ? `<i class="ri-lock-line" style="color: var(--accent-orange); margin-right: 4px;"></i>` : '';
         const cardStyle = isLocked ? `opacity: 0.65; border-left-color: var(--accent-orange);` : `border-left-color: var(--accent-orange);`;
         const xpPct = recipe.xp > 0 ? Math.min(100, Math.round((userXP / recipe.xp) * 100)) : 100;
@@ -1369,7 +1408,7 @@ function renderMoinho() {
                         <h4 style="font-style: italic; display: flex; align-items: center;">${lockIcon} ${recipe.name} &nbsp; ${lockBadge}</h4>
                         <div class="printer-card-meta">
                             Tempo: <strong>${recipe.time}</strong> | Materiais: ${ingredientsHTML}<br>
-                            Skill: <strong>${recipe.skill}</strong> | XP Req: <strong>${recipe.xp}</strong> | No estoque: <strong style="color: var(--accent-orange);">${currentStock} u.</strong>
+                            Skill: <strong>${recipe.skill}</strong> | XP Req: <strong>${recipe.xp}</strong> | No estoque: <strong style="color: var(--accent-orange);">${currentStock} u.</strong> | Pode refinar: ${maxCraftableText}
                         </div>
                     </div>
                 </div>
@@ -1519,6 +1558,11 @@ function renderPrinterPo() {
             ingredientsHTML += `<span class="recipe-ingredient-tag ${statusClass}">${reqQty}x ${matName} (${currentMatStock})</span>`;
         }
         
+        const maxCraftable = getMaxCraftableQty(recipe);
+        const maxCraftableText = maxCraftable > 0 
+            ? `<strong style="color: var(--accent-green);">${maxCraftable} u.</strong>` 
+            : `<span style="color: var(--text-muted); font-weight: normal;">0 u.</span>`;
+        
         const lockIcon = isLocked ? `<i class="ri-lock-line" style="color: var(--accent-red); margin-right: 4px;"></i>` : '';
         const cardStyle = isLocked ? `opacity: 0.65; border-left-color: var(--accent-red);` : `border-left-color: var(--accent-red);`;
         const xpPct = recipe.xp > 0 ? Math.min(100, Math.round((userXP / recipe.xp) * 100)) : 100;
@@ -1545,7 +1589,7 @@ function renderPrinterPo() {
                         <h4 style="font-style: italic; display: flex; align-items: center;">${lockIcon} ${recipe.name} &nbsp; ${lockBadge}</h4>
                         <div class="printer-card-meta">
                             Tempo: <strong>${recipe.time}</strong> | Materiais: ${ingredientsHTML}<br>
-                            Skill: <strong>${recipe.skill}</strong> | XP Req: <strong>${recipe.xp}</strong> | No estoque: <strong style="color: var(--accent-red);">${currentStock} u.</strong>
+                            Skill: <strong>${recipe.skill}</strong> | XP Req: <strong>${recipe.xp}</strong> | No estoque: <strong style="color: var(--accent-red);">${currentStock} u.</strong> | Pode produzir: ${maxCraftableText}
                         </div>
                     </div>
                 </div>
@@ -1870,10 +1914,10 @@ function renderStockTable() {
                     </div>
                 </td>
                 <td>
-                    <div style="display: flex; gap: 4px; align-items: center;">
-                        <input type="number" value="${item.qty}" min="0" onchange="updateStockDirectQty('${item.id}', this.value)" style="width: 60px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: #fff; padding: 4px; border-radius: 4px; text-align: center;">
-                        <button class="qty-btn" onclick="adjustStockQty('${item.id}', 1)"><i class="ri-add-line"></i></button>
-                        <button class="qty-btn" onclick="adjustStockQty('${item.id}', -1)"><i class="ri-subtract-line"></i></button>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <input type="number" id="insert-qty-${item.id}" value="0" min="0" style="width: 60px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: #fff; padding: 4px; border-radius: 4px; text-align: center;">
+                        <button class="qty-btn" onclick="addStockInputQty('${item.id}', false)" title="Inserir no estoque" style="background: rgba(46, 204, 113, 0.15); border-color: #2ecc71; color: #2ecc71;"><i class="ri-add-line"></i></button>
+                        <button class="qty-btn" onclick="addStockInputQty('${item.id}', true)" title="Remover do estoque" style="background: rgba(231, 76, 60, 0.15); border-color: #e74c3c; color: #e74c3c;"><i class="ri-subtract-line"></i></button>
                     </div>
                 </td>
                 <td style="text-align: center;">
@@ -1885,20 +1929,31 @@ function renderStockTable() {
     });
 }
 
-function adjustStockQty(itemId, amount) {
+function addStockInputQty(itemId, isSubtract = false) {
     const item = state.inventory.find(i => i.id === itemId);
-    if (item) {
-        item.qty += amount;
-        if (item.qty < 0) item.qty = 0;
-        updateUI();
-    }
-}
-
-function updateStockDirectQty(itemId, value) {
-    const item = state.inventory.find(i => i.id === itemId);
-    const parsed = parseInt(value);
-    if (item && !isNaN(parsed) && parsed >= 0) {
-        item.qty = parsed;
+    const input = document.getElementById(`insert-qty-${itemId}`);
+    if (item && input) {
+        const val = parseInt(input.value) || 0;
+        if (val < 0) {
+            showToast("Quantidade inválida.", "error");
+            return;
+        }
+        if (val === 0) {
+            showToast("Insira uma quantidade maior que zero para ajustar.", "warning");
+            return;
+        }
+        if (isSubtract) {
+            if (item.qty < val) {
+                showToast(`Quantidade insuficiente! Você só possui ${item.qty} u. em estoque.`, "error");
+                return;
+            }
+            item.qty -= val;
+            showToast(`Removidos ${val}x ${item.name} do estoque.`, "warning");
+        } else {
+            item.qty += val;
+            showToast(`Adicionados ${val}x ${item.name} ao estoque.`, "success");
+        }
+        input.value = "0";
         updateUI();
     }
 }
