@@ -79,6 +79,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link link-orange" onclick="switchSection('conversao')" id="nav-conversao">
+                        <i class="ri-arrow-left-right-line"></i>
+                        <span>Conversão Bruto para Forjado</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link link-pink" onclick="switchSection('cozinha')" id="nav-cozinha">
                         <i class="ri-restaurant-line"></i>
                         <span>Cozinha</span>
@@ -100,6 +106,12 @@
                     <a class="nav-link link-orange" onclick="switchSection('impressorapo')" id="nav-impressorapo">
                         <i class="ri-cpu-line"></i>
                         <span>Imp. Industrial de Pó</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchSection('bancada')" id="nav-bancada">
+                        <i class="ri-hammer-line"></i>
+                        <span>Bancada de Trabalho</span>
                     </a>
                 </li>
                 
@@ -418,6 +430,154 @@
                 </div>
             </section>
             
+            <!-- SECTION 1C: CONVERSÃO BRUTO PARA FORJADO -->
+            <section id="conversao-section" class="dashboard-section">
+                <div class="content-grid single">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title" style="color: var(--accent-orange);"><i class="ri-arrow-left-right-line"></i> Conversão de Minério Bruto para Forjado</h3>
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);">Taxa de Conversão: 2 Brutos = 1 Forjado</span>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.88rem;">
+                            Converta seus minérios brutos em ligas forjadas de alta performance. Digite a quantidade de minério bruto que deseja fundir e converter. O estoque de brutos será deduzido e o de forjados será acrescido na proporção de 2:1.
+                        </p>
+                        
+                        <div class="material-list">
+                            <!-- Cobre -->
+                            <div class="material-item" style="padding: 1.25rem;">
+                                <div class="material-meta" style="gap: 1.5rem;">
+                                    <div>
+                                        <div class="material-name">Cobre Bruto &rarr; Cobre Forjado</div>
+                                        <div class="material-sub">
+                                            Estoque Bruto: <strong style="color: var(--accent-orange);" id="conv-stock-cobre_bruto">0 u.</strong> | 
+                                            Estoque Forjado: <strong style="color: var(--accent-cyan);" id="conv-stock-cobre_forjado">0 u.</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="number" class="form-control" id="conv-qty-cobre" value="0" min="0" step="2" oninput="updateConversionResult('cobre')" style="width: 100px; text-align: center;">
+                                        <span style="color: var(--text-muted); font-size: 0.85rem;">Brutos</span>
+                                    </div>
+                                    <div class="calc-arrow"><i class="ri-arrow-right-line"></i></div>
+                                    <div style="width: 120px; font-family: var(--font-display); font-weight: 700; color: var(--accent-green);" id="conv-result-cobre">
+                                        +0 Forjado
+                                    </div>
+                                    <button class="btn btn-orange" onclick="executeConversion('cobre_bruto', 'cobre_forjado', 'cobre')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                        <i class="ri-fire-line"></i> Converter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Ferro -->
+                            <div class="material-item" style="padding: 1.25rem;">
+                                <div class="material-meta" style="gap: 1.5rem;">
+                                    <div>
+                                        <div class="material-name">Ferro Bruto &rarr; Ferro Forjado</div>
+                                        <div class="material-sub">
+                                            Estoque Bruto: <strong style="color: var(--accent-orange);" id="conv-stock-ferro_bruto">0 u.</strong> | 
+                                            Estoque Forjado: <strong style="color: var(--accent-cyan);" id="conv-stock-ferro_forjado">0 u.</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="number" class="form-control" id="conv-qty-ferro" value="0" min="0" step="2" oninput="updateConversionResult('ferro')" style="width: 100px; text-align: center;">
+                                        <span style="color: var(--text-muted); font-size: 0.85rem;">Brutos</span>
+                                    </div>
+                                    <div class="calc-arrow"><i class="ri-arrow-right-line"></i></div>
+                                    <div style="width: 120px; font-family: var(--font-display); font-weight: 700; color: var(--accent-green);" id="conv-result-ferro">
+                                        +0 Forjado
+                                    </div>
+                                    <button class="btn btn-orange" onclick="executeConversion('ferro_bruto', 'ferro_forjado', 'ferro')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                        <i class="ri-fire-line"></i> Converter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Prata -->
+                            <div class="material-item" style="padding: 1.25rem;">
+                                <div class="material-meta" style="gap: 1.5rem;">
+                                    <div>
+                                        <div class="material-name">Prata Bruta &rarr; Prata Forjada</div>
+                                        <div class="material-sub">
+                                            Estoque Bruto: <strong style="color: var(--accent-orange);" id="conv-stock-prata_bruto">0 u.</strong> | 
+                                            Estoque Forjado: <strong style="color: var(--accent-cyan);" id="conv-stock-prata_forjado">0 u.</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="number" class="form-control" id="conv-qty-prata" value="0" min="0" step="2" oninput="updateConversionResult('prata')" style="width: 100px; text-align: center;">
+                                        <span style="color: var(--text-muted); font-size: 0.85rem;">Brutos</span>
+                                    </div>
+                                    <div class="calc-arrow"><i class="ri-arrow-right-line"></i></div>
+                                    <div style="width: 120px; font-family: var(--font-display); font-weight: 700; color: var(--accent-green);" id="conv-result-prata">
+                                        +0 Forjado
+                                    </div>
+                                    <button class="btn btn-orange" onclick="executeConversion('prata_bruto', 'prata_forjado', 'prata')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                        <i class="ri-fire-line"></i> Converter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Aço -->
+                            <div class="material-item" style="padding: 1.25rem;">
+                                <div class="material-meta" style="gap: 1.5rem;">
+                                    <div>
+                                        <div class="material-name">Aço Bruto &rarr; Aço Forjado</div>
+                                        <div class="material-sub">
+                                            Estoque Bruto: <strong style="color: var(--accent-orange);" id="conv-stock-aco_bruto">0 u.</strong> | 
+                                            Estoque Forjado: <strong style="color: var(--accent-cyan);" id="conv-stock-aco_forjado">0 u.</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="number" class="form-control" id="conv-qty-aco" value="0" min="0" step="2" oninput="updateConversionResult('aco')" style="width: 100px; text-align: center;">
+                                        <span style="color: var(--text-muted); font-size: 0.85rem;">Brutos</span>
+                                    </div>
+                                    <div class="calc-arrow"><i class="ri-arrow-right-line"></i></div>
+                                    <div style="width: 120px; font-family: var(--font-display); font-weight: 700; color: var(--accent-green);" id="conv-result-aco">
+                                        +0 Forjado
+                                    </div>
+                                    <button class="btn btn-orange" onclick="executeConversion('aco_bruto', 'aco_forjado', 'aco')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                        <i class="ri-fire-line"></i> Converter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Titânio -->
+                            <div class="material-item" style="padding: 1.25rem;">
+                                <div class="material-meta" style="gap: 1.5rem;">
+                                    <div>
+                                        <div class="material-name">Titânio Bruto &rarr; Barra de Titânio</div>
+                                        <div class="material-sub">
+                                            Estoque Bruto: <strong style="color: var(--accent-orange);" id="conv-stock-titanio_bruto">0 u.</strong> | 
+                                            Estoque Forjado (Barra): <strong style="color: var(--accent-cyan);" id="conv-stock-titanio_forjado">0 u.</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="number" class="form-control" id="conv-qty-titanio" value="0" min="0" step="2" oninput="updateConversionResult('titanio')" style="width: 100px; text-align: center;">
+                                        <span style="color: var(--text-muted); font-size: 0.85rem;">Brutos</span>
+                                    </div>
+                                    <div class="calc-arrow"><i class="ri-arrow-right-line"></i></div>
+                                    <div style="width: 120px; font-family: var(--font-display); font-weight: 700; color: var(--accent-green);" id="conv-result-titanio">
+                                        +0 Forjado
+                                    </div>
+                                    <button class="btn btn-orange" onclick="executeConversion('titanio_bruto', 'titanio_forjado', 'titanio')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                        <i class="ri-fire-line"></i> Converter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
             <!-- SECTION 2: MINERAÇÃO -->
             <section id="mineracao-section" class="dashboard-section">
                 <div class="content-grid">
@@ -700,6 +860,92 @@
                 </div>
             </section>
             
+            <!-- SECTION 6B: BANCADA DE TRABALHO -->
+            <section id="bancada-section" class="dashboard-section">
+                <!-- Base Materials Widget -->
+                <div class="base-mats-widget">
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-settings-4-line"></i>
+                            <span>Bronzinas</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="bancada-mat-jogo_bronzinas">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-bubble-chart-line"></i>
+                            <span>Conector Selado</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="bancada-mat-conector_selado">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-fire-line"></i>
+                            <span>Tratamento Térmico</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="bancada-mat-tratamento_termico">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-shield-flash-line"></i>
+                            <span>Tratamento Forjado</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="bancada-mat-tratamento_forjado">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-cpu-line"></i>
+                            <span>Comp. Eletrônicos</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="bancada-mat-componentes_eletronicos">0 u.</div>
+                    </div>
+                    <div class="base-mat-pill">
+                        <div class="base-mat-pill-name">
+                            <i class="ri-loop-left-line"></i>
+                            <span>Fio de Cobre</span>
+                        </div>
+                        <div class="base-mat-pill-qty" id="bancada-mat-fio_cobre">0 u.</div>
+                    </div>
+                </div>
+
+                <!-- Category Filters for Bancada -->
+                <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+                    <div style="font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; color: var(--accent-cyan); margin-bottom: 0.75rem;">
+                        <i class="ri-filter-line"></i> Filtrar Categorias
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="bancada-filter-container">
+                        <button class="card-action-btn" onclick="filterBancada('all')" id="bancada-filter-all" style="background: rgba(0, 240, 255, 0.1); border-color: var(--accent-cyan); color: var(--accent-cyan);">Todos</button>
+                        <button class="card-action-btn" onclick="filterBancada('admissao_escape')" id="bancada-filter-admissao_escape">Admissão & Escape</button>
+                        <button class="card-action-btn" onclick="filterBancada('biela')" id="bancada-filter-biela">Biela</button>
+                        <button class="card-action-btn" onclick="filterBancada('bloco')" id="bancada-filter-bloco">Bloco</button>
+                        <button class="card-action-btn" onclick="filterBancada('bomba')" id="bancada-filter-bomba">Bomba</button>
+                        <button class="card-action-btn" onclick="filterBancada('cabecote')" id="bancada-filter-cabecote">Cabeçote</button>
+                        <button class="card-action-btn" onclick="filterBancada('cambio_transmissao')" id="bancada-filter-cambio_transmissao">Câmbio & Transmissão</button>
+                        <button class="card-action-btn" onclick="filterBancada('comando')" id="bancada-filter-comando">Comando</button>
+                        <button class="card-action-btn" onclick="filterBancada('ecu')" id="bancada-filter-ecu">ECU & Placas</button>
+                        <button class="card-action-btn" onclick="filterBancada('intercooler')" id="bancada-filter-intercooler">Intercooler</button>
+                        <button class="card-action-btn" onclick="filterBancada('junta')" id="bancada-filter-junta">Junta</button>
+                        <button class="card-action-btn" onclick="filterBancada('pistao')" id="bancada-filter-pistao">Pistão</button>
+                        <button class="card-action-btn" onclick="filterBancada('radiador')" id="bancada-filter-radiador">Radiadores</button>
+                        <button class="card-action-btn" onclick="filterBancada('turbo')" id="bancada-filter-turbo">Turbo</button>
+                        <button class="card-action-btn" onclick="filterBancada('vela')" id="bancada-filter-vela">Velas</button>
+                        <button class="card-action-btn" onclick="filterBancada('virabrequim')" id="bancada-filter-virabrequim">Virabrequim</button>
+                        <button class="card-action-btn" onclick="filterBancada('volante')" id="bancada-filter-volante">Volante</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" style="color: var(--accent-cyan);"><i class="ri-hammer-fill"></i> Bancada de Trabalho e Montagem</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Skill: mecanico | Montagem final de motores e transmissão</span>
+                    </div>
+                    
+                    <div class="printer-list" id="bancada-recipes-list">
+                        <!-- Dynamically populated via JS -->
+                    </div>
+                </div>
+            </section>
+            
             <!-- SECTION 7: GESTÃO DE GASTOS -->
             <section id="gastos-section" class="dashboard-section">
                 <div class="stats-grid">
@@ -785,6 +1031,7 @@
                                             <option value="Impressora 3D">Impressora 3D</option>
                                             <option value="Moinho de Refino">Moinho de Refino</option>
                                             <option value="Imp. Industrial de Pó">Imp. Industrial de Pó</option>
+                                            <option value="Bancada de Trabalho">Bancada de Trabalho</option>
                                             <option value="Outros">Outros</option>
                                         </select>
                                     </div>
@@ -858,6 +1105,7 @@
                                         <option value="moinho">Moinho de Refino</option>
                                         <option value="impressorapo">Imp. Industrial de Pó</option>
                                         <option value="mineracao">Mineração</option>
+                                        <option value="bancada">Bancada de Trabalho</option>
                                     </select>
                                 </div>
                             </div>

@@ -92,7 +92,7 @@ let state = {
         { id: 'aco_bruto', name: 'Aço Bruto', category: 'mineracao', type: 'raw', qty: 8, minQty: 15, label: 'AC' },
         { id: 'aco_forjado', name: 'Aço Forjado', category: 'mineracao', type: 'forged', qty: 3, minQty: 8, label: 'AC+' },
         { id: 'titanio_bruto', name: 'Titânio Bruto', category: 'mineracao', type: 'raw', qty: 3, minQty: 10, label: 'TI' },
-        { id: 'titanio_forjado', name: 'Titânio Forjado', category: 'mineracao', type: 'forged', qty: 1, minQty: 5, label: 'TI+' },
+        { id: 'titanio_forjado', name: 'Barra de Titânio', category: 'mineracao', type: 'forged', qty: 1, minQty: 5, label: 'TI+' },
         
         // 3D Printer Materials
         { id: 'borracha', name: 'Composto de Borracha', category: 'impressora3d', type: 'raw', qty: 30, minQty: 15, label: 'BO' },
@@ -168,7 +168,158 @@ let state = {
         { id: 'nucleo_bruto_radiador', name: 'Núcleo Bruto de Radiador', category: 'impressorapo', type: 'other', qty: 0, minQty: 5, label: 'NBR' },
         { id: 'rotor_compressor', name: 'Rotor Compressor', category: 'impressorapo', type: 'other', qty: 0, minQty: 5, label: 'RCm' },
         { id: 'virabrequim_bruto', name: 'Virabrequim Bruto', category: 'impressorapo', type: 'other', qty: 0, minQty: 5, label: 'VBr' },
-        { id: 'volante_motor_bruto', name: 'Volante de Motor Bruto', category: 'impressorapo', type: 'other', qty: 0, minQty: 5, label: 'VMB' }
+        { id: 'volante_motor_bruto', name: 'Volante de Motor Bruto', category: 'impressorapo', type: 'other', qty: 0, minQty: 5, label: 'VMB' },
+        
+        // Bancada de Trabalho Raw / Intermediate Materials
+        { id: 'jogo_bronzinas', name: 'Jogo de Bronzinas', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'JBr' },
+        { id: 'tratamento_forjado', name: 'Tratamento Forjado', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'TF' },
+        { id: 'coletor_itb_sport', name: 'Coletor ITB Sport', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'CIS' },
+        { id: 'sensor_map_4bar', name: 'Sensor MAP 4 Bar', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'SM4' },
+        { id: 'sensor_pressao', name: 'Sensor de Pressão', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'SP' },
+        { id: 'coletor_racetune', name: 'Coletor RaceTune', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'CRT' },
+        { id: 'coletor_highflow', name: 'Coletor HighFlow', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'CHF' },
+        { id: 'mangote_silicone', name: 'Mangote de Silicone', category: 'bancada', type: 'raw', qty: 25, minQty: 15, label: 'MS' },
+        { id: 'sensor_maf', name: 'Sensor MAF', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'SMA' },
+        { id: 'gateway_can', name: 'Gateway CAN', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'GC' },
+        { id: 'sensor_tps', name: 'Sensor TPS', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'ST' },
+        { id: 'tbi_maxflow_80mm', name: 'TBI MaxFlow 80mm', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'TM8' },
+        { id: 'tbi_powerbore_70mm', name: 'TBI PowerBore 70mm', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'TP7' },
+        { id: 'conector_selado', name: 'Conector Selado', category: 'bancada', type: 'raw', qty: 20, minQty: 10, label: 'CSl' },
+        { id: 'tbi_60mm', name: 'TBI 60mm', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'T6' },
+        { id: 'abracadeira_vband', name: 'Abraçadeira V-Band', category: 'bancada', type: 'raw', qty: 20, minQty: 10, label: 'AVB' },
+        { id: 'escape_titanio', name: 'Escape de Titânio', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'ETi' },
+        { id: 'tratamento_termico', name: 'Tratamento Térmico', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'TT' },
+        { id: 'bomba_780_lph', name: 'Bomba 780 LPH', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'B78' },
+        { id: 'motor_bomba', name: 'Motor de Bomba', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'MB' },
+        { id: 'bomba_620_lph', name: 'Bomba 620 LPH', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'B62' },
+        { id: 'componentes_eletronicos', name: 'Componentes Eletrônicos', category: 'bancada', type: 'raw', qty: 50, minQty: 20, label: 'CEl' },
+        { id: 'engrenagens_street', name: 'Engrenagens Street', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'ES' },
+        { id: 'engrenagens_race', name: 'Engrenagens Race', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'ER' },
+        { id: 'cambio_auto_6m', name: 'Câmbio Auto 6-Marchas', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'CA6' },
+        { id: 'jogo_sincronizadores', name: 'Jogo de Sincronizadores', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'JS' },
+        { id: 'kit_embreagem', name: 'Kit de Embreagem', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'KE' },
+        { id: 'cambio_manual_5m', name: 'Câmbio Manual 5-Marchas', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'CM5' },
+        { id: 'comando_280_pistao', name: 'Comando 280°', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'C28' },
+        { id: 'comando_268_perfil', name: 'Comando 268°', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'C26' },
+        { id: 'controlador_wideband', name: 'Controlador Wideband', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'CW' },
+        { id: 'chip_firmware', name: 'Chip de Firmware', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'CFw' },
+        { id: 'modulo_processamento', name: 'Módulo Processamento', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'MPr' },
+        { id: 'tela_ft450', name: 'Tela FT450', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'TF4' },
+        { id: 'intercooler_iceboost', name: 'Intercooler IceBoost', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'IIB' },
+        { id: 'intercooler_maxchill', name: 'Intercooler MaxChill', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'IMC' },
+        { id: 'folha_cobre', name: 'Folha de Cobre', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'FCb' },
+        { id: 'folha_inconel', name: 'Folha de Inconel', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'FIn' },
+        { id: 'folha_mls', name: 'Folha MLS', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'FMl' },
+        { id: 'diferencial_lsd_competicao', name: 'Diferencial LSD de Competição', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'DLC' },
+        { id: 'diferencial_viscoso', name: 'Diferencial Viscoso', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'DV' },
+        { id: 'jogo_aneis_pistao', name: 'Jogo de Anéis de Pistão', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'JAP' },
+        { id: 'filamento_plastico', name: 'Filamento Plástico', category: 'bancada', type: 'raw', qty: 20, minQty: 10, label: 'FPl' },
+        { id: 'chicote_ecu', name: 'Chicote de ECU', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'ChE' },
+        { id: 'radiador_racing_tech', name: 'Radiador Racing Tech', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'RRT' },
+        { id: 'ventoinha_slim', name: 'Ventoinha Slim', category: 'bancada', type: 'raw', qty: 20, minQty: 10, label: 'VSl' },
+        { id: 'tampa_pressurizada', name: 'Tampa Pressurizada', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'TP' },
+        { id: 'radiador_aluminio', name: 'Radiador Alumínio', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'RAl' },
+        { id: 'bomba_carter_seco', name: 'Bomba de Cárter Seco', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'BCS' },
+        { id: 'nucleo_radiador', name: 'Núcleo de Radiador', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'NRa' },
+        { id: 'radiador_oleo', name: 'Radiador de Óleo', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'ROl' },
+        { id: 'controlador_pressao', name: 'Controlador de Pressão', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'CP' },
+        { id: 'rolamento_ceramico', name: 'Rolamento Cerâmico', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'RCe' },
+        { id: 'turbo_gt35_82', name: 'Turbo GT35 .82', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'TGT' },
+        { id: 'turbo_t28_64', name: 'Turbo T28 .64', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'TT2' },
+        { id: 'nucleo_twinscroll', name: 'Núcleo Twin-Scroll', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'NTS' },
+        { id: 'nucleo_turbo', name: 'Núcleo de Turbo', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'NTu' },
+        { id: 'wastegate', name: 'Wastegate', category: 'bancada', type: 'raw', qty: 15, minQty: 10, label: 'WG' },
+        { id: 'turbo_gt30_82', name: 'Turbo GT30 .82', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'TG3' },
+        { id: 'eletrodo_vela', name: 'Eletrodo de Vela', category: 'bancada', type: 'raw', qty: 25, minQty: 15, label: 'EV' },
+        { id: 'virabrequim_tarugo', name: 'Virabrequim de Tarugo', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'VTg' },
+        { id: 'volante_racing_billet', name: 'Volante Racing Billet', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'VRB' },
+        { id: 'volante_aluminio_light', name: 'Volante Alumínio Light', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'VAL' },
+        { id: 'volante_aliviado_street', name: 'Volante Aliviado Street', category: 'bancada', type: 'raw', qty: 10, minQty: 5, label: 'VAS' },
+        
+        // Bancada de Trabalho Crafted Products
+        { id: 'coletor_admissao_prototype', category: 'admissao_escape', name: 'Coletor Admissão Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CAP' },
+        { id: 'coletor_admissao_race', category: 'admissao_escape', name: 'Coletor Admissão Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CAR' },
+        { id: 'coletor_admissao_street', category: 'admissao_escape', name: 'Coletor Admissão Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CAS' },
+        { id: 'coletor_admissao_track', category: 'admissao_escape', name: 'Coletor Admissão Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CAT' },
+        { id: 'corpo_borboleta_prototype', category: 'admissao_escape', name: 'Corpo Borboleta Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CBP' },
+        { id: 'corpo_borboleta_race', category: 'admissao_escape', name: 'Corpo Borboleta Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CBR' },
+        { id: 'corpo_borboleta_street', category: 'admissao_escape', name: 'Corpo Borboleta Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CBS' },
+        { id: 'corpo_borboleta_track', category: 'admissao_escape', name: 'Corpo Borboleta Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CBT' },
+        { id: 'escape_prototype', category: 'admissao_escape', name: 'Escape Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'EP' },
+        { id: 'biela_forjada_oem', category: 'biela', name: 'Biela Forjada OEM', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BFO' },
+        { id: 'biela_h_beam', category: 'biela', name: 'Biela H-Beam', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BHB' },
+        { id: 'biela_titanio', category: 'biela', name: 'Biela Titânio', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BTi' },
+        { id: 'bloco_aluminio', category: 'bloco', name: 'Bloco Alumínio', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BAl' },
+        { id: 'bloco_billet', category: 'bloco', name: 'Bloco Billet', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BBi' },
+        { id: 'bloco_ferro_fundido', category: 'bloco', name: 'Bloco Ferro Fundido', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BFF' },
+        { id: 'bomba_combustivel_prototype', category: 'bomba', name: 'Bomba Combustível Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BCP' },
+        { id: 'bomba_combustivel_race', category: 'bomba', name: 'Bomba Combustível Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BCR' },
+        { id: 'bomba_combustivel_street', category: 'bomba', name: 'Bomba Combustível Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BCS' },
+        { id: 'bomba_combustivel_track', category: 'bomba', name: 'Bomba Combustível Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BCT' },
+        { id: 'cabecote_aluminio', category: 'cabecote', name: 'Cabeçote Alumínio', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CAl' },
+        { id: 'cabecote_cnc_billet', category: 'cabecote', name: 'Cabeçote CNC Billet', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CCB' },
+        { id: 'cabecote_ferro', category: 'cabecote', name: 'Cabeçote Ferro', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CFe' },
+        { id: 'coroa_pinhao_aceleracao', category: 'cambio_transmissao', name: 'Coroa e Pinhão Aceleração', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CPA' },
+        { id: 'coroa_pinhao_balanceado', category: 'cambio_transmissao', name: 'Coroa e Pinhão Balanceado', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CPB' },
+        { id: 'coroa_pinhao_race', category: 'cambio_transmissao', name: 'Coroa e Pinhão Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CPR' },
+        { id: 'coroa_pinhao_velocidade', category: 'cambio_transmissao', name: 'Coroa e Pinhão Velocidade', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CPV' },
+        { id: 'cambio_prototype', category: 'cambio_transmissao', name: 'Câmbio Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CPt' },
+        { id: 'cambio_street', category: 'cambio_transmissao', name: 'Câmbio Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CSt' },
+        { id: 'cambio_track', category: 'cambio_transmissao', name: 'Câmbio Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'CTk' },
+        { id: 'comando_prototype', category: 'comando', name: 'Comando Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'COt' },
+        { id: 'comando_race', category: 'comando', name: 'Comando Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'COr' },
+        { id: 'comando_street', category: 'comando', name: 'Comando Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'COs' },
+        { id: 'comando_track', category: 'comando', name: 'Comando Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'COk' },
+        { id: 'ecu_ecumaster', category: 'ecu', name: 'ECU Ecumaster', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'EEc' },
+        { id: 'ecu_ft550', category: 'ecu', name: 'ECU FT550', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'EF5' },
+        { id: 'ecu_ft700', category: 'ecu', name: 'ECU FT700', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'EF7' },
+        { id: 'ecu_ft700_plus', category: 'ecu', name: 'ECU FT700 Plus', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'EFP' },
+        { id: 'ecu_octtane_race', category: 'ecu', name: 'ECU Octtane Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'EOR' },
+        { id: 'ecu_race_dash', category: 'ecu', name: 'ECU RACE DASH', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'ERD' },
+        { id: 'intercooler_prototype', category: 'intercooler', name: 'Intercooler Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'ICP' },
+        { id: 'intercooler_race', category: 'intercooler', name: 'Intercooler Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'ICR' },
+        { id: 'intercooler_street', category: 'intercooler', name: 'Intercooler Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'ICS' },
+        { id: 'intercooler_track', category: 'intercooler', name: 'Intercooler Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'ICT' },
+        { id: 'junta_cabecote_prototype', category: 'junta', name: 'Junta Cabeçote Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'JCP' },
+        { id: 'junta_cabecote_race', category: 'junta', name: 'Junta Cabeçote Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'JCR' },
+        { id: 'junta_cabecote_street', category: 'junta', name: 'Junta Cabeçote Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'JCS' },
+        { id: 'junta_cabecote_track', category: 'junta', name: 'Junta Cabeçote Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'JCT' },
+        { id: 'diferencial_prototype', category: 'cambio_transmissao', name: 'Diferencial Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'DFP' },
+        { id: 'diferencial_race', category: 'cambio_transmissao', name: 'Diferencial Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'DFR' },
+        { id: 'diferencial_street', category: 'cambio_transmissao', name: 'Diferencial Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'DFS' },
+        { id: 'diferencial_track', category: 'cambio_transmissao', name: 'Diferencial Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'DFT' },
+        { id: 'pistao_forjado', category: 'pistao', name: 'Pistão Forjado', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'PFo' },
+        { id: 'pistao_fundido', category: 'pistao', name: 'Pistão Fundido', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'PFu' },
+        { id: 'pistao_titanio', category: 'pistao', name: 'Pistão Titânio', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'PTi' },
+        { id: 'placa_conectora_ecu', category: 'ecu', name: 'Placa Conectora de ECU', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'PCE' },
+        { id: 'placa_ecu_ecumaster', category: 'ecu', name: 'Placa ECU Ecumaster', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'PEE' },
+        { id: 'placa_ecu_octtane', category: 'ecu', name: 'Placa ECU Octtane', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'PEO' },
+        { id: 'radiador_prototype', category: 'radiador', name: 'Radiador Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'RPr' },
+        { id: 'radiador_race', category: 'radiador', name: 'Radiador Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'RRa' },
+        { id: 'radiador_street', category: 'radiador', name: 'Radiador Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'RSt' },
+        { id: 'radiador_track', category: 'radiador', name: 'Radiador Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'RTr' },
+        { id: 'radiador_oleo_prototype', category: 'radiador', name: 'Radiador Óleo Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'ROP' },
+        { id: 'radiador_oleo_race', category: 'radiador', name: 'Radiador Óleo Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'ROR' },
+        { id: 'radiador_oleo_street', category: 'radiador', name: 'Radiador Óleo Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'ROS' },
+        { id: 'radiador_oleo_track', category: 'radiador', name: 'Radiador Óleo Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'ROT' },
+        { id: 'biturbo_race', category: 'turbo', name: 'Biturbo Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BTR' },
+        { id: 'biturbo_street', category: 'turbo', name: 'Biturbo Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'BTS' },
+        { id: 'turbo_prototype', category: 'turbo', name: 'Turbo Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'TPt' },
+        { id: 'turbo_race_mid', category: 'turbo', name: 'Turbo Race Mid', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'TRM' },
+        { id: 'turbo_race_top', category: 'turbo', name: 'Turbo Race Top', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'TRT' },
+        { id: 'turbo_street_low', category: 'turbo', name: 'Turbo Street Low', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'TSL' },
+        { id: 'turbo_street_mid', category: 'turbo', name: 'Turbo Street Mid', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'TSM' },
+        { id: 'twin_turbo_drag', category: 'turbo', name: 'Twin Turbo Drag', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'TTD' },
+        { id: 'twin_turbo_race', category: 'turbo', name: 'Twin Turbo Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'TTR' },
+        { id: 'vela_ignicao_street', category: 'vela', name: 'Vela Ignição Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'VIS' },
+        { id: 'virabrequim_prototype', category: 'virabrequim', name: 'Virabrequim Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'VPt' },
+        { id: 'virabrequim_race', category: 'virabrequim', name: 'Virabrequim Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'VRa' },
+        { id: 'virabrequim_street', category: 'virabrequim', name: 'Virabrequim Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'VSt' },
+        { id: 'virabrequim_track', category: 'virabrequim', name: 'Virabrequim Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'VTk' },
+        { id: 'volante_motor_prototype', category: 'volante', name: 'Volante Motor Prototype', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'VMP' },
+        { id: 'volante_motor_race', category: 'volante', name: 'Volante Motor Race', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'VMR' },
+        { id: 'volante_motor_street', category: 'volante', name: 'Volante Motor Street', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'VMS' },
+        { id: 'volante_motor_track', category: 'volante', name: 'Volante Motor Track', category: 'bancada', type: 'other', qty: 0, minQty: 5, label: 'VMT' }
     ],
     currentFilter: 'all'
 };
@@ -233,6 +384,93 @@ const poRecipes = [
     { id: 'rotor_compressor', name: 'Rotor Compressor', time: '05:00', materials: { po_aluminio: 4, po_aco: 1 }, skill: 'mecanico', xp: 700 },
     { id: 'virabrequim_bruto', name: 'Virabrequim Bruto', time: '05:00', materials: { po_aluminio: 2, po_aco: 10 }, skill: 'mecanico', xp: 700 },
     { id: 'volante_motor_bruto', name: 'Volante de Motor Bruto', time: '05:00', materials: { po_aluminio: 2, po_aco: 6 }, skill: 'mecanico', xp: 700 }
+];
+
+// Bancada de Trabalho Recipe Data
+const bancadaRecipes = [
+    { id: 'coletor_admissao_prototype', category: 'admissao_escape', name: 'Coletor Admissão Prototype', time: '05:00', materials: { titanio_forjado: 1, coletor_itb_sport: 1, sensor_map_4bar: 1, sensor_pressao: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'coletor_admissao_race', category: 'admissao_escape', name: 'Coletor Admissão Race', time: '05:00', materials: { titanio_forjado: 1, coletor_racetune: 1, sensor_map_4bar: 1, sensor_pressao: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'coletor_admissao_street', category: 'admissao_escape', name: 'Coletor Admissão Street', time: '05:00', materials: { borracha: 2, corpo_borboleta_bruto: 1, duto_admissao: 1, po_aluminio: 2 }, skill: 'mecanico', xp: 400 },
+    { id: 'coletor_admissao_track', category: 'admissao_escape', name: 'Coletor Admissão Track', time: '05:00', materials: { coletor_highflow: 1, corpo_borboleta_bruto: 1, mangote_silicone: 2, sensor_maf: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'corpo_borboleta_prototype', category: 'admissao_escape', name: 'Corpo Borboleta Prototype', time: '05:00', materials: { titanio_forjado: 1, gateway_can: 1, sensor_tps: 1, tbi_maxflow_80mm: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'corpo_borboleta_race', category: 'admissao_escape', name: 'Corpo Borboleta Race', time: '05:00', materials: { titanio_forjado: 1, gateway_can: 1, sensor_tps: 1, tbi_powerbore_70mm: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'corpo_borboleta_street', category: 'admissao_escape', name: 'Corpo Borboleta Street', time: '05:00', materials: { conector_selado: 1, corpo_borboleta_bruto: 1, sensor_tps: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'corpo_borboleta_track', category: 'admissao_escape', name: 'Corpo Borboleta Track', time: '05:00', materials: { po_aluminio: 2, sensor_tps: 1, sensor_pressao: 1, tbi_60mm: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'escape_prototype', category: 'admissao_escape', name: 'Escape Prototype', time: '05:00', materials: { abracadeira_vband: 4, titanio_forjado: 2, escape_titanio: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'biela_forjada_oem', category: 'biela', name: 'Biela Forjada OEM', time: '05:00', materials: { jogo_bronzinas: 1, molde_biela_usinada: 4 }, skill: 'mecanico', xp: 400 },
+    { id: 'biela_h_beam', category: 'biela', name: 'Biela H-Beam', time: '05:00', materials: { jogo_bronzinas: 1, molde_biela_usinada: 4, tratamento_forjado: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'biela_titanio', category: 'biela', name: 'Biela Titânio', time: '05:00', materials: { titanio_forjado: 1, jogo_bronzinas: 1, molde_biela_usinada: 4 }, skill: 'mecanico', xp: 2400 },
+    { id: 'bloco_aluminio', category: 'bloco', name: 'Bloco Alumínio', time: '05:00', materials: { bloco_bruto_aluminio: 1, jogo_bronzinas: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'bloco_billet', category: 'bloco', name: 'Bloco Billet', time: '05:00', materials: { bloco_bruto_aluminio: 1, bloco_bruto_ferro: 1, jogo_bronzinas: 1, tratamento_termico: 1 }, skill: 'mecanico', xp: 3000 },
+    { id: 'bloco_ferro_fundido', category: 'bloco', name: 'Bloco Ferro Fundido', time: '05:00', materials: { bloco_bruto_ferro: 1, jogo_bronzinas: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'bomba_combustivel_prototype', category: 'bomba', name: 'Bomba Combustível Prototype', time: '05:00', materials: { bomba_780_lph: 1, conector_selado: 2, gateway_can: 1, motor_bomba: 1, sensor_pressao: 2 }, skill: 'mecanico', xp: 3200 },
+    { id: 'bomba_combustivel_race', category: 'bomba', name: 'Bomba Combustível Race', time: '05:00', materials: { bomba_620_lph: 1, conector_selado: 1, gateway_can: 1, motor_bomba: 1, sensor_pressao: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'bomba_combustivel_street', category: 'bomba', name: 'Bomba Combustível Street', time: '05:00', materials: { componentes_eletronicos: 2, borracha: 2, conector_selado: 1, motor_bomba: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'bomba_combustivel_track', category: 'bomba', name: 'Bomba Combustível Track', time: '05:00', materials: { componentes_eletronicos: 4, borracha: 2, conector_selado: 1, motor_bomba: 2, sensor_pressao: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'cabecote_aluminio', category: 'cabecote', name: 'Cabeçote Alumínio', time: '05:00', materials: { cabecote_bruto: 1, tratamento_termico: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'cabecote_cnc_billet', category: 'cabecote', name: 'Cabeçote CNC Billet', time: '05:00', materials: { cabecote_aluminio: 1, po_aco: 3 }, skill: 'mecanico', xp: 3000 },
+    { id: 'cabecote_ferro', category: 'cabecote', name: 'Cabeçote Ferro', time: '05:00', materials: { cabecote_bruto: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'coroa_pinhao_aceleracao', category: 'cambio_transmissao', name: 'Coroa e Pinhão Aceleração', time: '05:00', materials: { engrenagens_street: 1, po_aco: 4 }, skill: 'mecanico', xp: 400 },
+    { id: 'coroa_pinhao_balanceado', category: 'cambio_transmissao', name: 'Coroa e Pinhão Balanceado', time: '05:00', materials: { engrenagens_street: 1, po_aco: 4 }, skill: 'mecanico', xp: 1200 },
+    { id: 'coroa_pinhao_race', category: 'cambio_transmissao', name: 'Coroa e Pinhão Race', time: '05:00', materials: { titanio_forjado: 1, coroa_pinhao_velocidade: 1, engrenagens_race: 1, tratamento_termico: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'coroa_pinhao_velocidade', category: 'cambio_transmissao', name: 'Coroa e Pinhão Velocidade', time: '05:00', materials: { engrenagens_street: 1, po_aco: 5, tratamento_termico: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'cambio_prototype', category: 'cambio_transmissao', name: 'Câmbio Prototype', time: '05:00', materials: { titanio_forjado: 1, cambio_auto_6m: 1, engrenagens_race: 1, jogo_sincronizadores: 2, kit_embreagem: 2 }, skill: 'mecanico', xp: 3200 },
+    { id: 'cambio_street', category: 'cambio_transmissao', name: 'Câmbio Street', time: '05:00', materials: { carcaca_cambio_bruta: 1, engrenagens_street: 1, jogo_sincronizadores: 1, kit_embreagem: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'cambio_track', category: 'cambio_transmissao', name: 'Câmbio Track', time: '05:00', materials: { cambio_manual_5m: 1, engrenagens_street: 1, jogo_sincronizadores: 1, kit_embreagem: 1, tratamento_termico: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'comando_prototype', category: 'comando', name: 'Comando Prototype', time: '05:00', materials: { titanio_forjado: 1, comando_bruto: 1, tratamento_termico: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'comando_race', category: 'comando', name: 'Comando Race', time: '05:00', materials: { titanio_forjado: 1, comando_bruto: 1, tratamento_termico: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'comando_street', category: 'comando', name: 'Comando Street', time: '05:00', materials: { comando_bruto: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'comando_track', category: 'comando', name: 'Comando Track', time: '05:00', materials: { comando_bruto: 1, tratamento_termico: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'ecu_ecumaster', category: 'ecu', name: 'ECU Ecumaster', time: '05:00', materials: { prata_forjado: 15, carcaca_ecu_ecumaster: 1, chip_firmware: 1, componentes_eletronicos: 14, controlador_wideband: 1, fio_cobre: 8, conector_selado: 1, modulo_processamento: 1, placa_ecu_ecumaster: 1 }, skill: 'mecanico', xp: 500 },
+    { id: 'ecu_ft550', category: 'ecu', name: 'ECU FT550', time: '05:00', materials: { base_ecu: 1, componentes_eletronicos: 4, placa_conectora_ecu: 1, suporte_ecu: 1, tela_ft450: 1 }, skill: 'mecanico', xp: 500 },
+    { id: 'ecu_ft700', category: 'ecu', name: 'ECU FT700', time: '05:00', materials: { base_ecu: 1, chip_firmware: 1, componentes_eletronicos: 10, conector_selado: 1, modulo_processamento: 1, placa_conectora_ecu: 1 }, skill: 'mecanico', xp: 500 },
+    { id: 'ecu_ft700_plus', category: 'ecu', name: 'ECU FT700 Plus', time: '05:00', materials: { base_ecu: 1, chip_firmware: 1, componentes_eletronicos: 10, conector_selado: 1, modulo_processamento: 1, placa_conectora_ecu: 1 }, skill: 'mecanico', xp: 500 },
+    { id: 'ecu_octtane_race', category: 'ecu', name: 'ECU Octtane Race', time: '05:00', materials: { carcaca_ecu_octtane: 1, chicote_ecu: 1, componentes_eletronicos: 10, controlador_wideband: 1, modulo_processamento: 1, placa_ecu_octtane: 1 }, skill: 'mecanico', xp: 500 },
+    { id: 'ecu_race_dash', category: 'ecu', name: 'ECU RACE DASH', time: '05:00', materials: { base_ecu: 1, chip_firmware: 1, componentes_eletronicos: 10, conector_selado: 1, modulo_processamento: 1, placa_conectora_ecu: 1 }, skill: 'mecanico', xp: 500 },
+    { id: 'intercooler_prototype', category: 'intercooler', name: 'Intercooler Prototype', time: '05:00', materials: { titanio_forjado: 1, intercooler_iceboost: 1, mangote_silicone: 4, nucleo_bruto_intercooler: 1, sensor_pressao: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'intercooler_race', category: 'intercooler', name: 'Intercooler Race', time: '05:00', materials: { titanio_forjado: 1, intercooler_maxchill: 1, mangote_silicone: 4, nucleo_bruto_intercooler: 1, sensor_pressao: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'intercooler_street', category: 'intercooler', name: 'Intercooler Street', time: '05:00', materials: { caixa_lateral_intercooler: 2, mangote_silicone: 2, nucleo_bruto_intercooler: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'intercooler_track', category: 'intercooler', name: 'Intercooler Track', time: '05:00', materials: { caixa_lateral_intercooler: 2, duto_intercooler: 1, mangote_silicone: 4, nucleo_bruto_intercooler: 2, sensor_pressao: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'junta_cabecote_prototype', category: 'junta', name: 'Junta Cabeçote Prototype', time: '05:00', materials: { folha_cobre: 1, folha_inconel: 1, po_aco: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'junta_cabecote_race', category: 'junta', name: 'Junta Cabeçote Race', time: '05:00', materials: { folha_cobre: 2, po_aco: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'junta_cabecote_street', category: 'junta', name: 'Junta Cabeçote Street', time: '05:00', materials: { fio_cobre: 1, folha_mls: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'junta_cabecote_track', category: 'junta', name: 'Junta Cabeçote Track', time: '05:00', materials: { fio_cobre: 1, folha_mls: 2, po_aco: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'diferencial_prototype', category: 'cambio_transmissao', name: 'Diferencial Prototype', time: '05:00', materials: { titanio_forjado: 1, coroa_pinhao_race: 1, diferencial_lsd_competicao: 1, nucleo_lsd: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'diferencial_race', category: 'cambio_transmissao', name: 'Diferencial Race', time: '05:00', materials: { carcaca_diferencial_bruta: 1, engrenagens_race: 1, nucleo_lsd: 1, tratamento_termico: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'diferencial_street', category: 'cambio_transmissao', name: 'Diferencial Street', time: '05:00', materials: { carcaca_diferencial_bruta: 1, engrenagens_street: 1, nucleo_lsd: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'diferencial_track', category: 'cambio_transmissao', name: 'Diferencial Track', time: '05:00', materials: { coroa_pinhao_balanceado: 1, diferencial_viscoso: 1, nucleo_lsd: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'pistao_forjado', category: 'pistao', name: 'Pistão Forjado', time: '05:00', materials: { jogo_aneis_pistao: 1, molde_pistao_usinado: 4, tratamento_forjado: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'pistao_fundido', category: 'pistao', name: 'Pistão Fundido', time: '05:00', materials: { jogo_aneis_pistao: 1, molde_pistao_usinado: 4 }, skill: 'mecanico', xp: 400 },
+    { id: 'pistao_titanio', category: 'pistao', name: 'Pistão Titânio', time: '05:00', materials: { prata_forjado: 14, titanio_forjado: 2, fio_cobre: 8, jogo_aneis_pistao: 1, molde_pistao_usinado: 4, po_aluminio: 4 }, skill: 'mecanico', xp: 2400 },
+    { id: 'placa_conectora_ecu', category: 'ecu', name: 'Placa Conectora de ECU', time: '05:00', materials: { prata_forjado: 1, componentes_eletronicos: 3, filamento_plastico: 1, fio_cobre: 1 }, skill: 'mecanico', xp: 500 },
+    { id: 'placa_ecu_ecumaster', category: 'ecu', name: 'Placa ECU Ecumaster', time: '05:00', materials: { prata_forjado: 4, componentes_eletronicos: 7, conector_selado: 2, fio_cobre: 2, gateway_can: 1 }, skill: 'mecanico', xp: 500 },
+    { id: 'placa_ecu_octtane', category: 'ecu', name: 'Placa ECU Octtane', time: '05:00', materials: { prata_forjado: 2, componentes_eletronicos: 5, conector_selado: 1, fio_cobre: 1 }, skill: 'mecanico', xp: 500 },
+    { id: 'radiador_prototype', category: 'radiador', name: 'Radiador Prototype', time: '05:00', materials: { titanio_forjado: 1, nucleo_bruto_radiador: 1, radiador_racing_tech: 1, sensor_pressao: 1, ventoinha_slim: 2 }, skill: 'mecanico', xp: 3200 },
+    { id: 'radiador_race', category: 'radiador', name: 'Radiador Race', time: '05:00', materials: { mangote_silicone: 4, nucleo_bruto_radiador: 2, sensor_pressao: 1, tampa_pressurizada: 1, ventoinha_slim: 2 }, skill: 'mecanico', xp: 2400 },
+    { id: 'radiador_street', category: 'radiador', name: 'Radiador Street', time: '05:00', materials: { mangote_silicone: 2, nucleo_bruto_radiador: 1, tampa_pressurizada: 1, ventoinha_slim: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'radiador_track', category: 'radiador', name: 'Radiador Track', time: '05:00', materials: { nucleo_bruto_radiador: 1, radiador_aluminio: 1, tampa_pressurizada: 1, ventoinha_slim: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'radiador_oleo_prototype', category: 'radiador', name: 'Radiador Óleo Prototype', time: '05:00', materials: { titanio_forjado: 1, bomba_carter_seco: 1, nucleo_radiador: 2, radiador_oleo: 1, sensor_pressao: 2 }, skill: 'mecanico', xp: 3200 },
+    { id: 'radiador_oleo_race', category: 'radiador', name: 'Radiador Óleo Race', time: '05:00', materials: { bomba_carter_seco: 1, nucleo_radiador: 2, radiador_oleo: 1, sensor_pressao: 2 }, skill: 'mecanico', xp: 2400 },
+    { id: 'radiador_oleo_street', category: 'radiador', name: 'Radiador Óleo Street', time: '05:00', materials: { mangote_silicone: 2, nucleo_radiador: 1, po_aluminio: 2 }, skill: 'mecanico', xp: 400 },
+    { id: 'radiador_oleo_track', category: 'radiador', name: 'Radiador Óleo Track', time: '05:00', materials: { nucleo_radiador: 1, radiador_oleo: 1, sensor_pressao: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'biturbo_race', category: 'turbo', name: 'Biturbo Race', time: '05:00', materials: { abracadeira_vband: 6, controlador_pressao: 2, rolamento_ceramico: 2, turbo_gt35_82: 2 }, skill: 'mecanico', xp: 3400 },
+    { id: 'biturbo_street', category: 'turbo', name: 'Biturbo Street', time: '05:00', materials: { abracadeira_vband: 4, controlador_pressao: 1, turbo_t28_64: 2 }, skill: 'mecanico', xp: 3400 },
+    { id: 'turbo_prototype', category: 'turbo', name: 'Turbo Prototype', time: '05:00', materials: { titanio_forjado: 1, carcaca_turbo_race: 1, controlador_pressao: 1, nucleo_twinscroll: 1, rolamento_ceramico: 1, rotor_compressor: 1 }, skill: 'mecanico', xp: 3400 },
+    { id: 'turbo_race_mid', category: 'turbo', name: 'Turbo Race Mid', time: '05:00', materials: { carcaca_turbo_media: 1, controlador_pressao: 1, nucleo_turbo: 1, rolamento_ceramico: 1, rotor_compressor: 1, wastegate: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'turbo_race_top', category: 'turbo', name: 'Turbo Race Top', time: '05:00', materials: { carcaca_turbo_race: 1, controlador_pressao: 1, nucleo_turbo: 1, rolamento_ceramico: 1, rotor_compressor: 1, wastegate: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'turbo_street_low', category: 'turbo', name: 'Turbo Street Low', time: '05:00', materials: { carcaca_turbo_pequena: 1, nucleo_turbo: 1, rotor_compressor: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'turbo_street_mid', category: 'turbo', name: 'Turbo Street Mid', time: '05:00', materials: { carcaca_turbo_media: 1, nucleo_turbo: 1, rotor_compressor: 1, wastegate: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'twin_turbo_drag', category: 'turbo', name: 'Twin Turbo Drag', time: '05:00', materials: { abracadeira_vband: 6, controlador_pressao: 2, rolamento_ceramico: 1, turbo_gt35_82: 2 }, skill: 'mecanico', xp: 3400 },
+    { id: 'twin_turbo_race', category: 'turbo', name: 'Twin Turbo Race', time: '05:00', materials: { abracadeira_vband: 4, coletor_escape_bruto: 1, controlador_pressao: 1, turbo_gt30_82: 2 }, skill: 'mecanico', xp: 3400 },
+    { id: 'vela_ignicao_street', category: 'vela', name: 'Vela Ignição Street', time: '05:00', materials: { prata_forjado: 1, eletrodo_vela: 4, fio_cobre: 1, po_aco: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'virabrequim_prototype', category: 'virabrequim', name: 'Virabrequim Prototype', time: '05:00', materials: { titanio_forjado: 1, tratamento_termico: 1, virabrequim_tarugo: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'virabrequim_race', category: 'virabrequim', name: 'Virabrequim Race', time: '05:00', materials: { jogo_bronzinas: 1, tratamento_termico: 1, virabrequim_bruto: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'virabrequim_street', category: 'virabrequim', name: 'Virabrequim Street', time: '05:00', materials: { jogo_bronzinas: 1, virabrequim_bruto: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'virabrequim_track', category: 'virabrequim', name: 'Virabrequim Track', time: '05:00', materials: { jogo_bronzinas: 1, virabrequim_bruto: 1 }, skill: 'mecanico', xp: 1200 },
+    { id: 'volante_motor_prototype', category: 'volante', name: 'Volante Motor Prototype', time: '05:00', materials: { titanio_forjado: 1, volante_racing_billet: 1, volante_motor_bruto: 1 }, skill: 'mecanico', xp: 3200 },
+    { id: 'volante_motor_race', category: 'volante', name: 'Volante Motor Race', time: '05:00', materials: { tratamento_termico: 1, volante_aluminio_light: 1, volante_motor_bruto: 1 }, skill: 'mecanico', xp: 2400 },
+    { id: 'volante_motor_street', category: 'volante', name: 'Volante Motor Street', time: '05:00', materials: { volante_motor_bruto: 1 }, skill: 'mecanico', xp: 400 },
+    { id: 'volante_motor_track', category: 'volante', name: 'Volante Motor Track', time: '05:00', materials: { volante_aliviado_street: 1, volante_motor_bruto: 1 }, skill: 'mecanico', xp: 1200 }
 ];
 
 // Cooking Slots active state
@@ -510,6 +748,7 @@ function setPlayerXP(value) {
     renderPrinterPo();
     renderPrinter3D();
     renderMoinho();
+    renderBancada();
 }
 
 async function loadUserData() {
@@ -717,6 +956,23 @@ function updateUI() {
     renderCozinha();
     renderMoinho();
     renderPrinterPo();
+    renderBancada();
+    renderConversao();
+    
+    // Update Bancada base materials
+    const wBronzinas = document.getElementById('bancada-mat-jogo_bronzinas');
+    const wConectorSelado = document.getElementById('bancada-mat-conector_selado');
+    const wTratamentoTermico = document.getElementById('bancada-mat-tratamento_termico');
+    const wTratamentoForjado = document.getElementById('bancada-mat-tratamento_forjado');
+    const wCompEletr = document.getElementById('bancada-mat-componentes_eletronicos');
+    const wFioCobre = document.getElementById('bancada-mat-fio_cobre');
+
+    if (wBronzinas) wBronzinas.textContent = `${getStockQty('jogo_bronzinas')} u.`;
+    if (wConectorSelado) wConectorSelado.textContent = `${getStockQty('conector_selado')} u.`;
+    if (wTratamentoTermico) wTratamentoTermico.textContent = `${getStockQty('tratamento_termico')} u.`;
+    if (wTratamentoForjado) wTratamentoForjado.textContent = `${getStockQty('tratamento_forjado')} u.`;
+    if (wCompEletr) wCompEletr.textContent = `${getStockQty('componentes_eletronicos')} u.`;
+    if (wFioCobre) wFioCobre.textContent = `${getStockQty('fio_cobre')} u.`;
     
     // Update mineral purchase calculator balance
     const calcBal = document.getElementById('buy-current-balance');
@@ -736,7 +992,7 @@ function formatCurrency(value) {
 
 // Switch Sections (SPA navigation)
 function switchSection(sectionId) {
-    const sections = ['dashboard', 'mineracao', 'cozinha', 'impressora3d', 'moinho', 'impressorapo', 'gastos', 'estoque', 'calc-compra'];
+    const sections = ['dashboard', 'mineracao', 'cozinha', 'impressora3d', 'moinho', 'impressorapo', 'bancada', 'gastos', 'estoque', 'calc-compra', 'conversao'];
     
     sections.forEach(sec => {
         const elem = document.getElementById(`${sec}-section`);
@@ -781,6 +1037,10 @@ function switchSection(sectionId) {
         case 'impressorapo':
             headerTitle.textContent = "Impressora Industrial de Pó";
             headerDesc.textContent = "Sinterização a laser (DMLS) de blocos de motor, turbinas e bielas.";
+            break;
+        case 'bancada':
+            headerTitle.textContent = "Bancada de Trabalho";
+            headerDesc.textContent = "Montagem final de motores, coletores, cabeçotes e componentes de alta performance.";
             break;
         case 'gastos':
             headerTitle.textContent = "Gestão Financeira";
@@ -1684,6 +1944,287 @@ function craftPoItem(recipeId) {
 }
 
 /* ==========================================================================
+   BANCADA DE TRABALHO LOGIC
+   ========================================================================== */
+
+let currentBancadaFilter = 'all';
+
+function filterBancada(category) {
+    currentBancadaFilter = category;
+    
+    const categories = ['all', 'admissao_escape', 'biela', 'bloco', 'bomba', 'cabecote', 'cambio_transmissao', 'comando', 'ecu', 'intercooler', 'junta', 'pistao', 'radiador', 'turbo', 'vela', 'virabrequim', 'volante'];
+    categories.forEach(cat => {
+        const btn = document.getElementById(`bancada-filter-${cat}`);
+        if (btn) {
+            if (cat === category) {
+                btn.style.background = 'rgba(0, 240, 255, 0.1)';
+                btn.style.borderColor = 'var(--accent-cyan)';
+                btn.style.color = 'var(--accent-cyan)';
+            } else {
+                btn.style.background = 'rgba(255, 255, 255, 0.04)';
+                btn.style.borderColor = 'var(--border-color)';
+                btn.style.color = 'var(--text-primary)';
+            }
+        }
+    });
+    
+    renderBancada();
+}
+
+function renderBancada() {
+    const recipesContainer = document.getElementById('bancada-recipes-list');
+    if (!recipesContainer) return;
+    recipesContainer.innerHTML = '';
+    
+    let recipesToRender = bancadaRecipes;
+    if (currentBancadaFilter !== 'all') {
+        recipesToRender = bancadaRecipes.filter(r => r.category === currentBancadaFilter);
+    }
+    
+    recipesToRender.forEach(recipe => {
+        const currentStock = getStockQty(recipe.id);
+        const userXP = state.playerXP || 0;
+        const isLocked = !state.bypassXP && userXP < recipe.xp;
+        
+        let ingredientsHTML = '';
+        let canPrint = true;
+        
+        for (const [matId, reqQty] of Object.entries(recipe.materials)) {
+            const stockMat = state.inventory.find(i => i.id === matId);
+            const currentMatStock = stockMat ? stockMat.qty : 0;
+            const matName = stockMat ? stockMat.name : matId;
+            
+            const isSufficient = currentMatStock >= reqQty;
+            if (!isSufficient) canPrint = false;
+            
+            const statusClass = isSufficient ? 'sufficient' : 'insufficient';
+            ingredientsHTML += `<span class="recipe-ingredient-tag ${statusClass}">${reqQty}x ${matName} (${currentMatStock})</span>`;
+        }
+        
+        const maxCraftable = getMaxCraftableQty(recipe);
+        const maxCraftableText = maxCraftable > 0 
+            ? `<strong style="color: var(--accent-green);">${maxCraftable} u.</strong>` 
+            : `<span style="color: var(--text-muted); font-weight: normal;">0 u.</span>`;
+        
+        const lockIcon = isLocked ? `<i class="ri-lock-line" style="color: var(--accent-pink); margin-right: 4px;"></i>` : '';
+        const cardStyle = isLocked ? `opacity: 0.65; border-left-color: var(--accent-pink);` : ``;
+        const xpPct = recipe.xp > 0 ? Math.min(100, Math.round((userXP / recipe.xp) * 100)) : 100;
+        const xpMissing = recipe.xp - userXP;
+        const lockBadge = isLocked
+            ? `<span class="slot-status-badge free" style="background: rgba(255,0,127,0.08); color: var(--accent-pink); border-color: rgba(255,0,127,0.25); font-weight:700; display:inline-flex; flex-direction:column; gap:3px; padding: 4px 10px; border-radius: 8px;">
+                 <span style="font-size:0.75rem;">🔒 ${userXP} / ${recipe.xp} XP &mdash; faltam <strong>${xpMissing}</strong></span>
+                 <span style="display:block; width:120px; height:4px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;">
+                   <span style="display:block; width:${xpPct}%; height:100%; background: var(--accent-pink); border-radius:4px;"></span>
+                 </span>
+               </span>`
+            : '';
+        const printButton = isLocked
+            ? `<button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; cursor: not-allowed;" disabled><i class="ri-lock-line"></i> Bloqueado</button>`
+            : `<button class="btn btn-cyan" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="craftBancadaItem('${recipe.id}')"><i class="ri-hammer-line"></i> Montar</button>`;
+        
+        const cardHTML = `
+            <div class="printer-card" style="${cardStyle}">
+                <div class="printer-card-left">
+                    <div class="printer-card-icon-box" style="background: rgba(0, 240, 255, 0.07); border-color: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.3));">
+                        <i class="ri-hammer-line"></i>
+                    </div>
+                    <div class="printer-card-info">
+                        <h4 style="font-style: italic; display: flex; align-items: center;">${lockIcon} ${recipe.name} &nbsp; ${lockBadge}</h4>
+                        <div class="printer-card-meta">
+                            Tempo: <strong>${recipe.time}</strong> | Materiais: ${ingredientsHTML}<br>
+                            Skill: <strong>${recipe.skill}</strong> | XP Req: <strong>${recipe.xp}</strong> | No estoque: <strong style="color: var(--accent-cyan);">${currentStock} u.</strong> | Pode montar: ${maxCraftableText}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="printer-card-actions">
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        <input type="number" id="bancada-qty-${recipe.id}" value="1" min="1" style="width: 50px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: #fff; padding: 4px; border-radius: 4px; text-align: center;" ${isLocked ? 'disabled' : ''}>
+                        ${printButton}
+                    </div>
+                </div>
+            </div>
+        `;
+        recipesContainer.insertAdjacentHTML('beforeend', cardHTML);
+    });
+}
+
+function craftBancadaItem(recipeId) {
+    const recipe = bancadaRecipes.find(r => r.id === recipeId);
+    if (!recipe) return;
+    
+    // Check lock
+    const userXP = state.playerXP || 0;
+    if (!state.bypassXP && userXP < recipe.xp) {
+        showToast(`XP insuficiente! Este item requer ${recipe.xp} XP.`, 'error');
+        return;
+    }
+    
+    const qtyInput = document.getElementById(`bancada-qty-${recipeId}`);
+    const multiplier = parseInt(qtyInput.value) || 1;
+    
+    if (multiplier <= 0) {
+        showToast("Insira uma quantidade maior que zero.", "error");
+        return;
+    }
+    
+    let missingMats = [];
+    for (const [matId, reqQty] of Object.entries(recipe.materials)) {
+        const stockItem = state.inventory.find(i => i.id === matId);
+        const currentQty = stockItem ? stockItem.qty : 0;
+        const totalRequired = reqQty * multiplier;
+        if (currentQty < totalRequired) {
+            missingMats.push({
+                name: stockItem ? stockItem.name : matId,
+                missing: totalRequired - currentQty
+            });
+        }
+    }
+    
+    if (missingMats.length > 0) {
+        const missingStr = missingMats.map(m => `${m.missing}x ${m.name}`).join(', ');
+        showToast(`Ingredientes insuficientes! Faltando: ${missingStr}`, "error");
+        return;
+    }
+    
+    // Deduct ingredients
+    for (const [matId, reqQty] of Object.entries(recipe.materials)) {
+        const stockItem = state.inventory.find(i => i.id === matId);
+        if (stockItem) {
+            stockItem.qty -= reqQty * multiplier;
+        }
+    }
+    
+    // Add product to inventory
+    const productItem = state.inventory.find(i => i.id === recipeId);
+    if (productItem) {
+        productItem.qty += multiplier;
+    } else {
+        state.inventory.push({
+            id: recipeId,
+            name: recipe.name,
+            category: 'bancada',
+            type: 'other',
+            qty: multiplier,
+            minQty: 5,
+            label: recipe.name.substring(0, 2).toUpperCase()
+        });
+    }
+    
+    // Log financial transaction (0 cost)
+    state.transactions.unshift({
+        id: 't-bancada-' + Date.now(),
+        desc: `Montado (Bancada): ${multiplier}x ${recipe.name}`,
+        type: 'income',
+        category: 'Bancada de Trabalho',
+        value: 0,
+        date: new Date().toISOString()
+    });
+    
+    showToast(`Montagem concluída: ${multiplier}x ${recipe.name}!`);
+    updateUI();
+}
+
+/* ==========================================================================
+   CONVERSÃO BRUTO PARA FORJADO LOGIC
+   ========================================================================== */
+
+function renderConversao() {
+    const minerals = ['cobre', 'ferro', 'prata', 'aco', 'titanio'];
+    minerals.forEach(min => {
+        const brutoId = min === 'titanio' ? 'titanio_bruto' : `${min}_bruto`;
+        const forgedId = min === 'titanio' ? 'titanio_forjado' : `${min}_forjado`;
+        
+        const wBruto = document.getElementById(`conv-stock-${brutoId}`);
+        const wForged = document.getElementById(`conv-stock-${forgedId}`);
+        
+        if (wBruto) wBruto.textContent = `${getStockQty(brutoId)} u.`;
+        if (wForged) wForged.textContent = `${getStockQty(forgedId)} u.`;
+    });
+}
+
+function updateConversionResult(mineral) {
+    const input = document.getElementById(`conv-qty-${mineral}`);
+    const resultDiv = document.getElementById(`conv-result-${mineral}`);
+    if (!input || !resultDiv) return;
+    
+    const qty = parseInt(input.value) || 0;
+    const forgedQty = Math.floor(qty / 2);
+    
+    let html = `+${forgedQty} Forjado`;
+    if (qty % 2 !== 0 && qty > 0) {
+        html += `<br><span style="font-size: 0.72rem; color: var(--accent-orange); font-weight: normal;">(Sobrará 1 Bruto)</span>`;
+    }
+    
+    resultDiv.innerHTML = html;
+}
+
+function executeConversion(brutoId, forgedId, mineral) {
+    const input = document.getElementById(`conv-qty-${mineral}`);
+    if (!input) return;
+    
+    const qty = parseInt(input.value) || 0;
+    if (qty <= 0) {
+        showToast("Insira uma quantidade maior que zero para converter.", "error");
+        return;
+    }
+    
+    // If odd, we convert the even quantity (qty - 1), yielding (qty - 1) / 2 forged, leaving 1 raw
+    const convertQty = qty % 2 === 0 ? qty : qty - 1;
+    const yieldQty = convertQty / 2;
+    
+    if (convertQty === 0) {
+        showToast("Você precisa de pelo menos 2 minérios brutos para realizar a conversão.", "error");
+        return;
+    }
+    
+    const stockBruto = state.inventory.find(i => i.id === brutoId);
+    const stockForged = state.inventory.find(i => i.id === forgedId);
+    
+    if (!stockBruto || stockBruto.qty < convertQty) {
+        showToast(`Estoque de minério bruto insuficiente! Você tem ${stockBruto ? stockBruto.qty : 0} u.`, "error");
+        return;
+    }
+    
+    // Deduct raw & Add forged
+    stockBruto.qty -= convertQty;
+    if (stockForged) {
+        stockForged.qty += yieldQty;
+    } else {
+        state.inventory.push({
+            id: forgedId,
+            name: brutoId.replace('_bruto', ' Forjado').replace('titanio_forjado', 'Barra de Titânio'),
+            category: 'mineracao',
+            type: 'forged',
+            qty: yieldQty,
+            minQty: 5,
+            label: forgedId.substring(0, 2).toUpperCase() + '+'
+        });
+    }
+    
+    // Log transaction
+    state.transactions.unshift({
+        id: 't-conv-' + Date.now(),
+        desc: `Fundição: ${convertQty}x ${stockBruto.name} → ${yieldQty}x ${stockForged ? stockForged.name : forgedId}`,
+        type: 'income',
+        category: 'Outros',
+        value: 0,
+        date: new Date().toISOString()
+    });
+    
+    input.value = 0;
+    updateConversionResult(mineral);
+    
+    let msg = `Conversão concluída! ${convertQty}x Bruto transformados em ${yieldQty}x Forjado.`;
+    if (qty % 2 !== 0) {
+        msg += ` (1 Bruto restante sobrou no estoque)`;
+    }
+    showToast(msg);
+    updateUI();
+    saveToLocalStorage();
+}
+
+/* ==========================================================================
    FINANCE SECTION LOGIC
    ========================================================================== */
 
@@ -1890,7 +2431,8 @@ function renderStockTable() {
         const isDefaultKitchen = ['milho', 'trigo', 'alface', 'tomate', 'frutas', 'feijao', 'arroz', 'batata', 'agua', 'grao_cafe', 'pao_milho', 'pipoca', 'salada', 'salada_frutas', 'feijao_arroz', 'batata_cozida', 'batata_frita', 'cafe', 'sanduiche', 'burger'].includes(item.id);
         const isDefaultMoinho = ['borracha_bruta', 'fio_cobre', 'po_aluminio', 'po_aco'].includes(item.id);
         const isDefaultPo = ['pecas_arma', 'bloco_bruto_aluminio', 'bloco_bruto_ferro', 'cabecote_bruto', 'caixa_lateral_intercooler', 'carcaca_cambio_bruta', 'carcaca_diferencial_bruta', 'carcaca_turbo_media', 'carcaca_turbo_pequena', 'carcaca_turbo_race', 'coletor_escape_bruto', 'comando_bruto', 'conjunto_pecas_pistola', 'corpo_borboleta_bruto', 'flauta_combustivel_bruta', 'molde_biela_usinada', 'molde_pistao_usinado', 'nucleo_bruto_intercooler', 'nucleo_bruto_radiador', 'rotor_compressor', 'virabrequim_bruto', 'volante_motor_bruto'].includes(item.id);
-        const isFixo = isDefaultMining || isDefault3D || isDefaultKitchen || isDefaultMoinho || isDefaultPo;
+        const isDefaultBancada = item.category === 'bancada';
+        const isFixo = isDefaultMining || isDefault3D || isDefaultKitchen || isDefaultMoinho || isDefaultPo || isDefaultBancada;
         
         const actionBtn = isFixo 
             ? `<span style="color: var(--text-muted); font-size: 0.8rem;">Fixo</span>`
@@ -2105,7 +2647,92 @@ const globalSearchItems = [
     { name: 'Núcleo Bruto de Radiador', section: 'impressorapo', label: 'Imp. Industrial de Pó' },
     { name: 'Rotor Compressor', section: 'impressorapo', label: 'Imp. Industrial de Pó' },
     { name: 'Virabrequim Bruto', section: 'impressorapo', label: 'Imp. Industrial de Pó' },
-    { name: 'Volante de Motor Bruto', section: 'impressorapo', label: 'Imp. Industrial de Pó' }
+    { name: 'Volante de Motor Bruto', section: 'impressorapo', label: 'Imp. Industrial de Pó' },
+    
+    // Bancada de Trabalho
+    { name: 'Coletor Admissão Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Coletor Admissão Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Coletor Admissão Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Coletor Admissão Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Corpo Borboleta Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Corpo Borboleta Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Corpo Borboleta Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Corpo Borboleta Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Escape Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Biela Forjada OEM', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Biela H-Beam', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Biela Titânio', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Bloco Alumínio', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Bloco Billet', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Bloco Ferro Fundido', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Bomba Combustível Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Bomba Combustível Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Bomba Combustível Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Bomba Combustível Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Cabeçote Alumínio', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Cabeçote CNC Billet', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Cabeçote Ferro', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Coroa e Pinhão Aceleração', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Coroa e Pinhão Balanceado', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Coroa e Pinhão Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Coroa e Pinhão Velocidade', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Câmbio Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Câmbio Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Câmbio Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Comando Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Comando Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Comando Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Comando Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'ECU Ecumaster', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'ECU FT550', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'ECU FT700', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'ECU FT700 Plus', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'ECU Octtane Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'ECU RACE DASH', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Intercooler Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Intercooler Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Intercooler Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Intercooler Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Junta Cabeçote Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Junta Cabeçote Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Junta Cabeçote Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Junta Cabeçote Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Diferencial Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Diferencial Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Diferencial Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Diferencial Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Pistão Forjado', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Pistão Fundido', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Pistão Titânio', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Placa Conectora de ECU', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Placa ECU Ecumaster', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Placa ECU Octtane', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Radiador Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Radiador Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Radiador Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Radiador Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Radiador Óleo Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Radiador Óleo Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Radiador Óleo Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Radiador Óleo Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Biturbo Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Biturbo Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Turbo Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Turbo Race Mid', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Turbo Race Top', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Turbo Street Low', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Turbo Street Mid', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Twin Turbo Drag', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Twin Turbo Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Vela Ignição Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Virabrequim Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Virabrequim Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Virabrequim Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Virabrequim Track', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Volante Motor Prototype', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Volante Motor Race', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Volante Motor Street', section: 'bancada', label: 'Bancada de Trabalho' },
+    { name: 'Volante Motor Track', section: 'bancada', label: 'Bancada de Trabalho' }
 ];
 
 // Handles the global search input changes
@@ -2165,6 +2792,15 @@ function hideSearchDropdownDelayed() {
 function navigateToSearchItem(sectionId, itemName) {
     // 1. Switch to the target tab
     switchSection(sectionId);
+    
+    if (sectionId === 'bancada') {
+        const itemRecipe = bancadaRecipes.find(r => r.name.toLowerCase() === itemName.toLowerCase());
+        if (itemRecipe) {
+            filterBancada(itemRecipe.category);
+        } else {
+            filterBancada('all');
+        }
+    }
     
     // 2. Clear input and dropdown
     const input = document.getElementById('global-search-input');
